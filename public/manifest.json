@@ -1,0 +1,21 @@
+{
+    "name": "Ethereum",
+    "short_name": "Eth",
+    "theme_color": "#ffffff",
+    "permissions": [
+        "management"
+      ],
+    "background_color": "#004740",
+    "display": "fullscreen",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "public/icon.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      }     
+    ],
+    "splash_pages": null
+}
