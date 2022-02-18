@@ -26,11 +26,17 @@ export default function Connect() {
     read_id();
   }, []);
   const web3 = new Web3(Web3.givenProvider);
+  //  let dfg = new Promise((resolve,reject)=>
+  //  resolve(web3.eth.net));
+  //  dfg.then(res=>{
+  //   console.log('This is balance',res);
+  //   });
+ 
   async function ReadAccount() {
     // var accounts = await web3.eth.getAccounts();
-    // web3.eth.getBalance("0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f")
-    // .then((res)=>console.log('This is balance',res));
-    // console.log('This account',accounts);
+    web3.eth.getBalance("0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f")
+    .then((res)=>console.log('This is balance',res));
+    
     router.push('/');
     dispatch(increment());
     const con = ethereum.isConnected();
@@ -39,7 +45,9 @@ export default function Connect() {
     const my_accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     dispatch(incrementByAmount(my_accounts[0]));
     console.log('This my accounts',my_accounts);
-  };
+    const provider = await web3.eth.providers;
+    console.log('This provider', provider);
+  };  
   return (
     <div className="connect_main">
       <Link href="/">

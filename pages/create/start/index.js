@@ -14,7 +14,7 @@ export default function Start() {
           <button>Sign in</button>
         </div>
         <div>
-          <img alt="tz" src="/tz.svg" width="100" height="100" className="img" />
+          <Image alt="tz" src="/tz.svg" width="100" height="100" className="img" />
           <p>Tezos</p>
           <button>Sign in</button>
         </div>

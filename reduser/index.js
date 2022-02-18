@@ -7,7 +7,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 const initialState = {
   value: false,
   status: 'idle',
-  hash: ''
+  hash: '',
+  balance: 0
 }
 export const counterSlice = createSlice({
   name: 'counter',
@@ -50,6 +51,7 @@ export const { increment, decrement, incrementByAmount } = counterSlice.actions
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectCount = (state) => state.counter.value;
 export const hash = (state) => state.counter.hash;
+export const balance = (state) => state.counter.balance;
 
 
 // We can also write thunks by hand, which may contain both sync and async logic.

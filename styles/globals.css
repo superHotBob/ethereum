@@ -22,3 +22,6 @@ button {
 .icon_close {
   float: right;
 }
+.panda {
+  height: 50% !important;
+}

@@ -1,8 +1,8 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Single() {
-  const [selectedFile, setSelectedFile] = useState(0);
+  const [nft, setSelectedNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
   const [putMarket, setPutMarket] = useState(true);
@@ -10,7 +10,8 @@ export default function Single() {
   const [royalties, setRoyalties] = useState();
   const [minting, setMinting] = useState();
   const [description, setDescription] = useState();
-  const [name_ntf, setName_ntf] = useState();
+  const [name_nft, setName_ntf] = useState();
+  const [type_nft, setTypeNtf] = useState();
 
   const SetMyPrice = (e) => {
     const old = my_price;
@@ -19,63 +20,74 @@ export default function Single() {
       setMyPrice(e.target.value);
       console.log(my_price);
     } else if (Number(e.target.value) === 0) {
-      setMyPrice();
-      console.log("my_price");
+      setMyPrice();      
     } else {
       setMyPrice(old);
-      console.log("old");
+      
     }
   };
   const SetRoyalties = (e) => {
-      let data = e.target.value
-      console.log((data.search(/[a-zA-Z]/gi) === -1) && (data.length <3))  
-      if((data.search(/[a-zA-Z]/gi) === -1) && (data.length <3)) {
-          setRoyalties(data);
-          
-      } else {
-        setRoyalties('');
-      }
-  }
-
+    let data = e.target.value;
+    console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
+    if (data.search(/[a-zA-Z]/gi) === -1 && data.length < 3) {
+      setRoyalties(data);
+    } else {
+      setRoyalties("");
+    }
+  };
+  useEffect(() => {
+    const nft_name = localStorage.getItem("nft");    
+    const type = localStorage.getItem("type_nft");
+    setSelectedNft(nft_name);
+    setTypeNtf(type);
+  }, []);
+  useEffect(() => localStorage.setItem("nft", nft), [nft]);
   const changeHandler = async (event) => {
     var file = event.target.files[0];
+    setTypeNtf(file.type);
     var reader = new FileReader();
     var url = reader.readAsDataURL(file);
-    reader.onloadend = function (event) {
-      setSelectedFile(reader.result);
+    reader.onloadend = function () {
+      setSelectedNft(reader.result);
+      localStorage.setItem("nft", reader.result);
+      localStorage.setItem("type_nft", file.type);
     };
   };
 
-  const handleSubmission = () => {};
   return (
     <div className="single_main">
       <h1>Create single item on Ethereum</h1>
       <div className="main_choose_file">
         <div className="choose_file">
-          {selectedFile ? (
-            <>
+          {nft ? (
+            <div>
               <h5 className="icon_close">
                 <Image
                   alt="close"
                   src="/close.svg"
                   width="40px"
                   height="40px"
-                  onClick={() => setSelectedFile(0)}
+                  onClick={() => setSelectedNft("")}
                 />
               </h5>
-              <img src={selectedFile} />
-            </>
+              {type_nft !== "video/mp4" ? (
+                <img src={nft} alt="image_nft" />
+              ) : (
+                <video width="400" controls>
+                  <source src={selectedFile} type="video/mp4" />
+                </video>
+              )}
+            </div>
           ) : (
             <>
               <p>PNG, GIF, WEBP, MP4 or MP3. Max 100mb.</p>
-
               <label>
                 Choose File
                 <input
                   type="file"
                   id="file"
                   name="file"
-                  accept="image/png, image/gif,image/webp, image/jpeg"
+                  accept="image/png, image/gif,image/webp, image/jpeg,video/mp4"
                   onChange={changeHandler}
                 />
               </label>
@@ -158,7 +170,7 @@ export default function Single() {
                 onChange={SetMyPrice}
               />
             </label>
-            <p>'Locked content' is not allowed to be empty</p>
+            <p>&#34;Locked content&#34; is not allowed to be empty</p>
           </>
         )}
         <h3>Choose collection</h3>
@@ -208,11 +220,11 @@ export default function Single() {
           <input
             type="text"
             placeholder="e. g. 'Redeemable T-Shirt with logo'"
-            valie={name_ntf}
+            valie={name_nft}
             onChange={(e) => setName_ntf(e.target.value)}
           />
         </label>
-        {!name_ntf && (
+        {!name_nft && (
           <p style={{ color: "red" }}>{"Name"} is not allowed to be empty</p>
         )}
         <label className="price">
@@ -249,20 +261,20 @@ export default function Single() {
         <div className="create_item_block">
           <button
             className={
-              royalties && name_ntf ? "create_item" : "create_item disabled"
+              royalties && name_nft ? "create_item" : "create_item disabled"
             }
             disabled
           >
             Create item
           </button>
           <span>
-            Saved 28 seconds ago <b>?</b>
+            Saved after changes <b>?</b>
           </span>
         </div>
       </div>
 
       <div className="preview_file">
-        {!selectedFile && <p>Upload file to preview your brand new NFT</p>}
+        {!nft && <p>Upload file to preview your brand new NFT</p>}
       </div>
       <style jsx>
         {`
@@ -310,10 +322,10 @@ export default function Single() {
             font: 700 20px/30px Roboto, sans-serif;
           }
           .choose_file:after {
-            content: "File is required";
+            content: '"File" is required';
             position: absolute;
             top: 101%;
-            display: ${selectedFile ? "none" : "block"};
+            display: ${nft ? "none" : "block"};
             left: 0;
             color: red;
             font: 500 16px/30px Roboto, sans-serif;
@@ -354,7 +366,7 @@ export default function Single() {
             float: right;
             position: -webkit-sticky; /* Safari */
             position: sticky;
-            background-image: url(${selectedFile});
+            background-image: url(${nft});
             background-position: center 20%;
             background-repeat: no-repeat;
             background-size: 100%;
@@ -410,7 +422,7 @@ export default function Single() {
             -webkit-text-fill-color: transparent;
           }
           .unlock {
-            background: linear-gradient(to left,#c19ae5 50%, #121fcf);
+            background: linear-gradient(to left, #c19ae5 50%, #121fcf);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }

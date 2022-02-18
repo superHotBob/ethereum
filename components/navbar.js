@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   decrement, 
   selectCount,
-  hash
+  hash,
+  balance
 } from "../reduser";
 
 export default function Navbar() {
@@ -16,6 +17,7 @@ export default function Navbar() {
   };
   const count = useSelector(selectCount);
   const str = useSelector(hash);
+  const my_balance = useSelector(balance);
   const [viewWallet, setviewWallet] = useState(false);
  
   const substr = str ?  str.slice(7, str.length - 5): null;
@@ -73,13 +75,13 @@ export default function Navbar() {
           </span>
           <h2 className="hash">
               {new_str}{" "}
-              <img src="/copy.svg" width={18}/> 
+              <Image src="/copy.svg" width={18} height={18} alt="copy"/> 
           
           </h2>
           <div className="balance">
             <div style={{ backgroundImage: "url(/ethereum.svg)" }}>
                 Balance<br/>
-                <b>0 ETH</b>
+                <b>{my_balance} ETH</b>
             </div>
             <div style={{ backgroundImage: "url(/ethereum.svg)" }}>
                 Bidding Balance<br/>
