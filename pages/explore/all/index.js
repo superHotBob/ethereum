@@ -18,7 +18,7 @@ export default function ExploreAll() {
 
           <p className="name_image">
             Bear #4512
-            <img src="/ethereum.svg" width={30} height={30} alt="ethereum" />
+            <img src="/static/ethereum.svg" width={30} height={30} alt="ethereum" />
           </p>
           <p className="cost">
             1 ETH <span style={{ color: "#bbb" }}>1/1</span>

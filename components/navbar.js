@@ -66,7 +66,7 @@ export default function Navbar() {
           <span className="close">
             <Image
               alt="close"
-              src="/Icon_close.png"
+              src="/static/Icon_close.png"
               width={20}
               height={20}
               style={{ float: "right" }}
@@ -75,15 +75,15 @@ export default function Navbar() {
           </span>
           <h2 className="hash">
               {new_str}{" "}
-              <Image src="/copy.svg" width={18} height={18} alt="copy"/> 
+              <Image src="/static/copy.svg" width={18} height={18} alt="copy"/> 
           
           </h2>
           <div className="balance">
-            <div style={{ backgroundImage: "url(/ethereum.svg)" }}>
+            <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
                 Balance<br/>
                 <b>{my_balance} ETH</b>
             </div>
-            <div style={{ backgroundImage: "url(/ethereum.svg)" }}>
+            <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
                 Bidding Balance<br/>
                 <b>0 WETH</b> 
                 <button>Convert</button>
@@ -94,11 +94,11 @@ export default function Navbar() {
             </div> */}
             <button>Add funds with card</button>
           </div>
-          <button style={{ backgroundImage: "url(/user.png)" }}>My profile</button>
-          <button style={{ backgroundImage: "url(/edit.svg)" }}>Edit profile</button>
+          <button style={{ backgroundImage: "url(/static/user.png)" }}>My profile</button>
+          <button style={{ backgroundImage: "url(/static/edit.svg)" }}>Edit profile</button>
           <button
             onClick={SignOut}
-            style={{ backgroundImage: "url(/power-off.png)" }}
+            style={{ backgroundImage: "url(/static/power-off.png)" }}
           >
             Sign out
           </button>
@@ -194,7 +194,7 @@ export default function Navbar() {
         label {
           width: 29%;
           position: relative;
-          background-image: url("/search.svg");
+          background-image: url("/static/search.svg");
           background-repeat: no-repeat;
           background-position: 15% center;
         }

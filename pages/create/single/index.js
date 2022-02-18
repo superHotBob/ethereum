@@ -64,7 +64,7 @@ export default function Single() {
               <h5 className="icon_close">
                 <Image
                   alt="close"
-                  src="/close.svg"
+                  src="/static/close.svg"
                   width="40px"
                   height="40px"
                   onClick={() => setSelectedNft("")}
@@ -182,7 +182,7 @@ export default function Single() {
               marginRight: 20,
             }}
           >
-            <Image src="/plus.svg" alt="plus" width={50} height={50} />
+            <Image src="/static/plus.svg" alt="plus" width={50} height={50} />
             <br />
             Create <br />
             <b>ERC-721</b>
@@ -192,7 +192,7 @@ export default function Single() {
             style={{ borderColor: price === 1 ? "blue" : "rgba(4, 4, 5, 0.1)" }}
           >
             <Image
-              src="/rarible.png"
+              src="/static/rarible.png"
               alt="rarible"
               width={50}
               height={50}
