@@ -6,7 +6,7 @@ import Web3 from "web3";
 import Image from "next/image";
 import metamask from '../../public/image/metamask.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { increment, incrementByAmount} from '../../reduser';
+import { increment, incrementByAmount,changeBalance} from '../../reduser';
 export default function Connect() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -41,7 +41,11 @@ export default function Connect() {
   async function ReadAccount() {
     // var accounts = await web3.eth.getAccounts();
     web3.eth.getBalance("0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f")
-    .then((res)=>console.log('This is balance',res));
+    .then((res)=>{
+      console.log('This is balance',res/1000000000000000000);
+      dispatch(changeBalance(res/1000000000000000000));
+    });
+    web3.eth.getChainId().then(console.log);
     
     router.push('/');
     dispatch(increment());
@@ -54,7 +58,7 @@ export default function Connect() {
     const provider = await web3.eth.providers;
     console.log('This provider', provider);
   };
-  console.log(metamask.src); 
+  
   return (
     <div className="connect_main">
      
@@ -67,8 +71,8 @@ export default function Connect() {
       ) : (
         <button className="metamask" onClick={ReadAccount}>Sign in with Metamask</button>
       )}
-      <button>Sign in with Oasis Wallet</button>
-      <button>Create new Wallet</button>
+      {/* <button>Sign in with Oasis Wallet</button>
+      <button>Create new Wallet</button> */}
       <p>
         We do not own your private keys and cannot access your profile funds
         without your confirmation.

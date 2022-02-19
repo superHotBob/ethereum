@@ -19,10 +19,11 @@ export default function Navbar() {
   const str = useSelector(hash);
   const my_balance = useSelector(balance);
   const [viewWallet, setviewWallet] = useState(false);
+  const [textCopy, setTextCopy] = useState('copy to clipboard');
 
   function updateClipboard(newClip) {
     navigator.clipboard.writeText(newClip).then(function() {
-     console.log("Write to buffer");
+     setTextCopy('Copied');
     }, function() {
       console.log("No write to buffer");
     });
@@ -108,7 +109,7 @@ export default function Navbar() {
                 <b>0 RARI</b> 
                 <button>Claim</button>
             </div> */}
-            <button>Add funds with card</button>
+            {/* <button>Add funds with card</button> */}
           </div>
           <button style={{ backgroundImage: "url(/static/user.png)" }}>My profile</button>
           <button style={{ backgroundImage: "url(/static/edit.svg)" }}>Edit profile</button>
@@ -281,7 +282,7 @@ export default function Navbar() {
           cursor: pointer;
         }
         .copy_hash:before {
-          content: 'copy to clipboard';
+          content: '${textCopy}';
           font: 500 16px/16px Roboto,sans-serif;
           background: #000;
           color: #fff;
@@ -290,7 +291,9 @@ export default function Navbar() {
           top: -10px;
           left: 130px;
           border-radius: 15px;
-          padding: 10px 20px;
+          padding: 10px;
+          width: 150px;
+          text-align: center;
         }
         .copy_hash:hover:before {
           opacity: 1;
