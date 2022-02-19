@@ -25,3 +25,7 @@ button {
 .panda {
   height: 50% !important;
 }
+.close {
+  float: right;
+  cursor: pointer;
+}

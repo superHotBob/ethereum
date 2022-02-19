@@ -19,6 +19,14 @@ export default function Navbar() {
   const str = useSelector(hash);
   const my_balance = useSelector(balance);
   const [viewWallet, setviewWallet] = useState(false);
+
+  function updateClipboard(newClip) {
+    navigator.clipboard.writeText(newClip).then(function() {
+     console.log("Write to buffer");
+    }, function() {
+      console.log("No write to buffer");
+    });
+  }
  
   const substr = str ?  str.slice(7, str.length - 5): null;
   const new_str = str.replace(substr, "...");
@@ -75,19 +83,27 @@ export default function Navbar() {
           </span>
           <h2 className="hash">
               {new_str}{" "}
-              <Image src="/static/copy.svg" width={18} height={18} alt="copy"/> 
+              <span className="copy_hash">
+              <Image 
+                src="/static/copy.svg" 
+                width={18} 
+                height={18} 
+                alt="copy"
+               
+                onClick={()=>updateClipboard(str)}
+              /> </span>
           
           </h2>
           <div className="balance">
             <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
                 Balance<br/>
-                <b>{my_balance} ETH</b>
+                <b>{my_balance} TEST</b>
             </div>
-            <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
+            {/* <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
                 Bidding Balance<br/>
                 <b>0 WETH</b> 
                 <button>Convert</button>
-            </div>
+            </div> */}
             {/* <div>
                 <b>0 RARI</b> 
                 <button>Claim</button>
@@ -261,7 +277,24 @@ export default function Navbar() {
         .hash img {
             cursor: pointer;
         }
-       
+        .copy_hash {
+          cursor: pointer;
+        }
+        .copy_hash:before {
+          content: 'copy to clipboard';
+          font: 500 16px/16px Roboto,sans-serif;
+          background: #000;
+          color: #fff;
+          opacity: 0;
+          position: absolute;
+          top: -10px;
+          left: 130px;
+          border-radius: 15px;
+          padding: 10px 20px;
+        }
+        .copy_hash:hover:before {
+          opacity: 1;
+        }
         .wallet_name > button:hover {
           background-color: rgba(4, 4, 5, 0.07);
           border-radius: 10px;
@@ -299,6 +332,7 @@ export default function Navbar() {
             margin-top: -20px;
 
         }
+       
         .balance div {
           padding: 20px 0 20px 80px;
           margin: 0;

@@ -3,24 +3,30 @@ import React, { useState, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { useRouter } from 'next/router'
 import Web3 from "web3";
+import Image from "next/image";
+import metamask from '../../public/image/metamask.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { increment, incrementByAmount} from '../../reduser';
 export default function Connect() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [metaMask, setMetaMask] = useState(false);
+  const [errorMessage, viewErrorMessage] = useState(false);
 
   useEffect(() => {
     const read_id = async () => {
       const provider = await detectEthereumProvider();
+     
       
-      if (provider) {
+      if (provider.chainId === '0xa515' ) {
+        console.log("This is provider", provider);
         console.log("MetaMask installed!");
         // From now on, this should always be true:
         // provider === window.ethereum
         // startApp(provider); // initialize your app
       } else {
-        console.log("Please install MetaMask!");
+        console.log(provider.chainId);
+        viewErrorMessage(true);
       }
     };
     read_id();
@@ -47,9 +53,11 @@ export default function Connect() {
     console.log('This my accounts',my_accounts);
     const provider = await web3.eth.providers;
     console.log('This provider', provider);
-  };  
+  };
+  console.log(metamask.src); 
   return (
     <div className="connect_main">
+     
       <Link href="/">
         <a className="to_main_page">O</a>
       </Link>
@@ -65,6 +73,25 @@ export default function Connect() {
         We do not own your private keys and cannot access your profile funds
         without your confirmation.
       </p>
+      {errorMessage &&    
+        <div className="message_error">
+           <Link href="/" passHref>
+           <b className="close">
+            <Image
+              alt="close"
+              src="/static/Icon_close.png"
+              width={20}
+              height={20}
+              
+            />
+          </b>
+      </Link>
+      <p>You are connected to an unsupported network
+
+      </p>
+           
+        </div>
+      }
       <style jsx>{`
         .connect_main {
           background-color: #fff;
@@ -85,6 +112,24 @@ export default function Connect() {
           border-radius: 20px;
           background: rgb(254, 218, 3);
         }
+        .message_error  {
+          position: absolute;
+          top: 20%;
+          left: 30%;
+          height: 500px;
+          width: 40%;
+          padding: 10px;
+          background: #fff;
+          border-radius: 15px;
+          box-shadow: 0px 0px 15px 0px #9C9C9C;
+        }
+        .message_error p {
+          text-align: center;
+          font-size: 40px;         
+          color: red;
+          width: 100%;
+          margin-top: 200px;
+        }
         h1 {
           margin-top: 20vh;
           font: 700 55px/70px Roboto, sans-serif;
@@ -94,7 +139,7 @@ export default function Connect() {
           margin-top: 30px;
         }
         .metamask {
-          background-image: url(/metamask.svg);
+          background-image: url(${metamask.src});
           background-repeat: no-repeat;
           background-position: 5% center;
           background-size: 8%;
@@ -105,7 +150,7 @@ export default function Connect() {
           background-color: rgba(0, 102, 255, 0.8);
         }
         .without_metamask {
-          background-image: url(/metamask.svg);
+          background-image: url(${metamask.scr});
           background-repeat: no-repeat;
           background-position: 5% center;
           background-size: 8%;

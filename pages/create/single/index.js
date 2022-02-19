@@ -1,5 +1,8 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import  closeIcon  from  "../../../public/image/close.svg";
+import  rarible  from  "../../../public/image/rarible.png";
+
 
 export default function Single() {
   const [nft, setSelectedNft] = useState();
@@ -64,7 +67,7 @@ export default function Single() {
               <h5 className="icon_close">
                 <Image
                   alt="close"
-                  src="/static/close.svg"
+                  src={closeIcon}
                   width="40px"
                   height="40px"
                   onClick={() => setSelectedNft("")}
@@ -192,7 +195,7 @@ export default function Single() {
             style={{ borderColor: price === 1 ? "blue" : "rgba(4, 4, 5, 0.1)" }}
           >
             <Image
-              src="/static/rarible.png"
+              src={rarible}
               alt="rarible"
               width={50}
               height={50}
