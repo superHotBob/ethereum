@@ -39,8 +39,8 @@ export default function Connect() {
   //   });
  
   async function ReadAccount() {
-    // var accounts = await web3.eth.getAccounts();
-    web3.eth.getBalance("0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f")
+    const my_accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    web3.eth.getBalance(my_accounts[0])
     .then((res)=>{
       console.log('This is balance',res/1000000000000000000);
       dispatch(changeBalance(res/1000000000000000000));
@@ -49,10 +49,9 @@ export default function Connect() {
     
     router.push('/');
     dispatch(increment());
-    const con = ethereum.isConnected();
-    console.log(con);
-    // const chainId = await window.ethereum.request({ method: 'eth_chainId'});
-    const my_accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+   
+    
+    
     dispatch(incrementByAmount(my_accounts[0]));
     console.log('This my accounts',my_accounts);
     const provider = await web3.eth.providers;
