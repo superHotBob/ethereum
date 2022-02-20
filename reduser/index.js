@@ -26,7 +26,7 @@ export const counterSlice = createSlice({
       state.value = false
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
-    incrementByAmount: (state, action) => {
+    addAccount: (state, action) => {
       state.hash = action.payload
     },
     changeBalance: (state,action) => {
@@ -47,7 +47,7 @@ export const counterSlice = createSlice({
 //   },
 })
 
-export const { increment, decrement, incrementByAmount, changeBalance } = counterSlice.actions
+export const { increment, decrement, addAccount, changeBalance } = counterSlice.actions
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

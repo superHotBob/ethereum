@@ -6,7 +6,7 @@ import Web3 from "web3";
 import Image from "next/image";
 import metamask from '../../public/image/metamask.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { increment, incrementByAmount,changeBalance} from '../../reduser';
+import { increment, addAccount,changeBalance} from '../../reduser';
 export default function Connect() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -15,47 +15,30 @@ export default function Connect() {
 
   useEffect(() => {
     const read_id = async () => {
-      const provider = await detectEthereumProvider();
-     
+      // const provider = await detectEthereumProvider();
+      const chainId = await web3.eth.getChainId();
       
-      if (provider.chainId === '0xa515' ) {
-        console.log("This is provider", provider);
-        console.log("MetaMask installed!");
-        // From now on, this should always be true:
-        // provider === window.ethereum
-        // startApp(provider); // initialize your app
+      if (chainId === 42261 ) {
+        console.log("This is provider", chainId);
+        console.log("MetaMask installed!");        
       } else {
-        console.log(provider.chainId);
+        console.log(chainId);
         viewErrorMessage(true);
       }
     };
     read_id();
   }, []);
-  const web3 = new Web3(Web3.givenProvider);
-  //  let dfg = new Promise((resolve,reject)=>
-  //  resolve(web3.eth.net));
-  //  dfg.then(res=>{
-  //   console.log('This is balance',res);
-  //   });
+  const web3 = new Web3(Web3.givenProvider);  
  
   async function ReadAccount() {
-    const my_accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    web3.eth.getBalance(my_accounts[0])
-    .then((res)=>{
-      console.log('This is balance',res/1000000000000000000);
+    const my_account = await web3.eth.getAccounts();    ;
+    web3.eth.getBalance(my_account[0])
+    .then((res)=>{     
       dispatch(changeBalance(res/1000000000000000000));
-    });
-    web3.eth.getChainId().then(console.log);
-    
-    router.push('/');
-    dispatch(increment());
-   
-    
-    
-    dispatch(incrementByAmount(my_accounts[0]));
-    console.log('This my accounts',my_accounts);
-    const provider = await web3.eth.providers;
-    console.log('This provider', provider);
+    });    
+    dispatch(increment());    
+    dispatch(addAccount(my_account[0]));
+    router.push('/');   
   };
   
   return (

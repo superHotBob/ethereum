@@ -1,26 +1,35 @@
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import Web3 from "web3";
+import React, { useState, useEffect } from "react";
+import refresh from '../public/image/refresh_icon.png';
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrement, 
   selectCount,
+  addAccount,
+  changeBalance,
   hash,
   balance
 } from "../reduser";
 
 export default function Navbar() {
   const dispatch = useDispatch();
-  function SignOut() {
-    setviewWallet(false);
-    dispatch(decrement());
-  };
+
+ 
   const count = useSelector(selectCount);
   const str = useSelector(hash);
   const my_balance = useSelector(balance);
   const [viewWallet, setviewWallet] = useState(false);
   const [textCopy, setTextCopy] = useState('copy to clipboard');
+  const [refresh_balance, setRefreshBalance] = useState(false);
 
+  function SignOut() {
+    setviewWallet(false);
+    dispatch(decrement());
+    dispatch(addAccount(''));
+  };
+  
   function updateClipboard(newClip) {
     navigator.clipboard.writeText(newClip).then(function() {
      setTextCopy('Copied');
@@ -28,6 +37,18 @@ export default function Navbar() {
       console.log("No write to buffer");
     });
   }
+  const web3 = new Web3(Web3.givenProvider);
+  // useEffect(()=>setInterval(()=> setRefreshBalance(!refresh_balance),10000),[]);  
+  function Refresh() {
+  console.log(str);  
+        setRefreshBalance(true);
+        web3.eth.getBalance(str)       
+        .then(res => {     
+          dispatch(changeBalance(res/1000000000000000000));
+          
+          setTimeout(()=>setRefreshBalance(false),1000);
+        })
+  };
  
   const substr = str ?  str.slice(7, str.length - 5): null;
   const new_str = str.replace(substr, "...");
@@ -60,9 +81,10 @@ export default function Navbar() {
       </nav>
 
       <div>
+        {!str ?
         <Link href="/connect">
           <a className="sing_in">Sign in</a>
-        </Link>
+        </Link>:null}
         {count && (
           <span className="open_wallet" onClick={() => setviewWallet(true)} />
         )}
@@ -77,28 +99,34 @@ export default function Navbar() {
               alt="close"
               src="/static/Icon_close.png"
               width={20}
-              height={20}
-              style={{ float: "right" }}
+              height={20}             
               onClick={() => setviewWallet(false)}
             />
           </span>
           <h2 className="hash">
               {new_str}{" "}
               <span className="copy_hash">
-              <Image 
-                src="/static/copy.svg" 
-                width={18} 
-                height={18} 
-                alt="copy"
-               
-                onClick={()=>updateClipboard(str)}
-              /> </span>
+                <Image 
+                  src="/static/copy.svg" 
+                  width={18} 
+                  height={18} 
+                  alt="copy"                
+                  onClick={()=>updateClipboard(str)}
+                /> 
+              </span>
           
           </h2>
           <div className="balance">
-            <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
+            <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}  className="my__hash">
+              {refresh_balance ?
+              <div className="refresh">
+                <Image src={refresh} width={48} height={48} alt="refresh"   />
+              </div>:
+               <>
                 Balance<br/>
-                <b>{my_balance} TEST</b>
+                <b onClick={Refresh} title="refresh">{my_balance} TEST</b>
+                </>
+              }
             </div>
             {/* <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
                 Bidding Balance<br/>
@@ -253,7 +281,7 @@ export default function Navbar() {
           position: absolute;
           top: 120px;
           padding: 10px;
-          right: 188px;
+          right: 60px;
           background: #fff;
           box-shadow: 0px 0px 27px 0px rgba(34, 60, 80, 0.2);
         }
@@ -272,6 +300,14 @@ export default function Navbar() {
           font-size: 18px;
          
         }
+        .refresh {
+          animation: rotation 2s infinite linear;
+          display: inline-block;
+          width: 48.7px;
+          height: 48.7px;
+          padding: 0;
+        }
+       
         .hash {
             padding-left: 20px;
         }
@@ -336,13 +372,21 @@ export default function Navbar() {
 
         }
        
-        .balance div {
+        .my__hash {
           padding: 20px 0 20px 80px;
           margin: 0;
           background-size: 14%;
           color: gray;
           background-repeat: no-repeat;
           background-position: left center;
+        }
+        @keyframes rotation {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(359deg);
+          }
         }
         @media screen and (max-width: 680px) {
           .navbar_main {

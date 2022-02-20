@@ -1,8 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import  closeIcon  from  "../../../public/image/close.svg";
-import  rarible  from  "../../../public/image/rarible.png";
-
+import closeIcon from "../../../public/image/close.svg";
+import rarible from "../../../public/image/rarible.png";
 
 export default function Single() {
   const [nft, setSelectedNft] = useState();
@@ -23,11 +22,14 @@ export default function Single() {
       setMyPrice(e.target.value);
       console.log(my_price);
     } else if (Number(e.target.value) === 0) {
-      setMyPrice();      
+      setMyPrice();
     } else {
       setMyPrice(old);
-      
     }
+  };
+
+  const CreateItem = () => {
+    console.log("Item created");
   };
   const SetRoyalties = (e) => {
     let data = e.target.value;
@@ -39,7 +41,7 @@ export default function Single() {
     }
   };
   useEffect(() => {
-    const nft_name = localStorage.getItem("nft");    
+    const nft_name = localStorage.getItem("nft");
     const type = localStorage.getItem("type_nft");
     setSelectedNft(nft_name);
     setTypeNtf(type);
@@ -178,7 +180,7 @@ export default function Single() {
         )}
         <h3>Choose collection</h3>
         <div className="select collection">
-          <span
+          <div
             onClick={() => setPrice(0)}
             style={{
               borderColor: price === 0 ? "blue" : "rgba(4, 4, 5, 0.1)",
@@ -189,23 +191,17 @@ export default function Single() {
             <br />
             Create <br />
             <b>ERC-721</b>
-          </span>
-          <span
+          </div>
+          <div
             onClick={() => setPrice(1)}
             style={{ borderColor: price === 1 ? "blue" : "rgba(4, 4, 5, 0.1)" }}
           >
-            <Image
-              src={rarible}
-              alt="rarible"
-              width={50}
-              height={50}
-              className="rarible"
-            />
+            <span className="icon__oasis">O</span>
             <br />
             Oasis
             <br />
-            <b>RARI</b>
-          </span>
+            <b>ROSE</b>
+          </div>
         </div>
         <h3 className="put_on_market">
           Free minting
@@ -266,7 +262,8 @@ export default function Single() {
             className={
               royalties && name_nft ? "create_item" : "create_item disabled"
             }
-            disabled
+            disabled={!(royalties && name_nft)}
+            onClick={CreateItem}
           >
             Create item
           </button>
@@ -275,10 +272,13 @@ export default function Single() {
           </span>
         </div>
       </div>
-
-      <div className="preview_file">
-        {!nft && <p>Upload file to preview your brand new NFT</p>}
+      <div className="preview__unlocked">
+        <div className="preview_file">
+          {!nft && <p>Upload file to preview your brand new NFT</p>}
+        </div>
+        <div className="unlocked"></div>
       </div>
+
       <style jsx>
         {`
           p {
@@ -364,23 +364,29 @@ export default function Single() {
           .service_fee {
             margin: 20px 0;
           }
-          .preview_file {
+          .preview__unlocked {
             display: inline-block;
             float: right;
             position: -webkit-sticky; /* Safari */
             position: sticky;
+            top: 160px;
+            width: 35%;
+            margin-top: 50px;
+          }
+          .preview_file {
             background-image: url(${nft});
             background-position: center 20%;
             background-repeat: no-repeat;
             background-size: 100%;
-            top: 150px;
-            width: 35%;
-            margin-top: 50px;
             height: 500px;
             border: 1px solid rgba(4, 4, 5, 0.1);
             border-radius: 15px;
           }
-          .name_preview {
+          .unlocked {
+            border: 1px solid rgba(4, 4, 5, 0.1);
+            border-radius: 15px;
+            height: 100px;
+            margin-top: 30px;
           }
 
           .preview_file:before {
@@ -403,14 +409,22 @@ export default function Single() {
             margin: 20px 0 40px;
             justify-content: space-between;
           }
-          .select span {
-            width: 30%;
+          .select div {
+            width: 48%;
             border: 1px solid rgba(4, 4, 5, 0.1);
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
             padding: 40px 0;
             font: 500 18px/22px Roboto, sans-serif;
+          }
+          .icon__oasis {
+            font: 700 40px/50px Roboto, sans-serif;
+            background: linear-gradient(60deg, red, yellow);
+            padding: 1px 11px;
+            border-radius: 50px;
+            margin-bottom: 4px;
+            display: inline-block;
           }
           .select img {
             display: block;
@@ -518,7 +532,7 @@ export default function Single() {
             display: inline-block;
           }
           .collection {
-            justify-content: start;
+            justify-content: space-between;
           }
           span b {
             color: rgb(110, 110, 110);
