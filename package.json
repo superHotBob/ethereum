@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
+    "@nfte/react": "^1.0.4",
     "@reduxjs/toolkit": "^1.7.2",
     "next": "12.0.10",
     "react": "17.0.2",

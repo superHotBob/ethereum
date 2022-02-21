@@ -1,31 +1,124 @@
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { NFTE } from "@nfte/react";
 
 export default function Token() {
+  const [data, setData] = useState("");
+  const [menu, selectMenu] = useState("Owners");
+  useEffect(() => {
+    async function get() {
+      fetch(
+        "https://nfte.app/api/nft-data?contract=0x3b3ee1931dc30c1957379fac9aba94d1c48a5405&tokenId=45"
+      )
+        .then((response) => response.json())
+        .then((responce) => {
+          setData(responce);
+          console.log(responce);
+        });
+    }
+    get();
+  }, []);
   return (
-    <div className="token__main__block">
-      <div className="image__block"></div>
-      <div className="title__block"></div>
-      <style jsx>{`
-        .token__main__block {
-          margin: 200px auto;
-          width: 90%;
-        }
-        .image__block {
-          display: inline-block;
-          width: 60%;
-          height: 60vh;
-          padding: 20px;
-          background: url("https://img.rarible.com/prod/image/upload/t_image_big/prod-itemImages/0xb66a603f4cfe17e3d27b87a8bfcad319856518b8:105920822369709375853288917251796322838081429785310148444847718745428717469697/57b9c84")
-            no-repeat center 30%;
-          background-size: 80% auto;
-        }
-        .title__block {
-          display: inline-block;
-          width: 35%;
-        }
-      `}</style>
-    </div>
+    <>
+      {data ? (
+        <div className="token__main__block">
+          <div className="image__block">
+            {data.mediaMimeType !== "video/mp4" ? (
+              <Image src={data.mediaUrl} width={300} height={500} alt="media" />
+            ) : (
+              <video
+                width="600"
+                height=""
+                loop
+                autoPlay
+                muted
+                className="video"
+              >
+                <source src={data.mediaUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </div>
+          <div className="title__block">
+            <h1>{data.name}</h1>
+            <h4>{data.description}</h4>
+            <p className="creator">{data.creatorOf}</p>
+            <p className="menu">
+              <span className="Owners" onClick={() => selectMenu("Owners")}>
+                Owners
+              </span>
+              <span className="Details" onClick={() => selectMenu("Details")}>
+                Details
+              </span>
+              <span className="History" onClick={() => selectMenu("History")}>
+                History
+              </span>
+            </p>
+            <div className="select_menu">
+              {menu === 'Owners' ?
+              <h3>{data.ownerOf}</h3>: menu === 'Details' ?
+              <h3>
+                <p style={{color: 'gray',fontWeight: 500}}>Blockchain</p>
+               
+                  {data.platform}
+                
+              </h3>:null}
+            </div>
+          </div>
+          <style jsx>{`
+            .token__main__block {
+              margin: 100px auto;
+              width: 90%;
+            }
+            .video {
+              display: block;
+              margin: 80px auto 0;
+              border-radius: 15px;
+            }
+            .creator {
+              display: inline-block;
+              width: 45%;
+              margin-top: 30px;
+              position: relative;
+              padding: 15px 0;
+            }
+            .creator:before {
+              content: "Creator";
+              position: absolute;
+              top: -20px;
+              font: 500 20px/20px Roboto, sans-serif;
+            }
+            .menu {
+              font: 500 20px/60px Roboto, sans-serif;
+              border-bottom: 1px solid #bbb;
+              color: gray;
+              cursor: pointer;
+            }
+            .${menu} {
+              color: #000;
+            }
+            .menu span {
+              margin-right: 30px;
+            }
+            .menu span:hover {
+              color: #000;
+            }
+            .image__block {
+              display: inline-block;
+              width: 60%;
+              height: 60vh;
+              padding: 20px;
+            }
+
+            .title__block {
+              display: inline-block;
+              width: 35%;
+              vertical-align: top;
+            }
+          `}</style>
+        </div>
+      ) : null}
+    </>
   );
 }

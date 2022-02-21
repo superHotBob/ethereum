@@ -7,27 +7,27 @@ export default function ExploreAll() {
       <h1>Explore ALL NFTs</h1>
       <div className="all_nft">
         <Link href="/token" passHref>            
-        <div className="image_block">
-          <p className="bolls">
-            <span className="collection main">ENS</span>
-            <span className="collection owner"></span>
-            <span className="collection creator"></span>
-          </p>
-          
-          
-
-          <p className="name_image">
-            Bear #4512
-            <span className="icon_close">
-              <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
-            </span>
+          <div className="image_block">
+            <p className="bolls">
+              <span className="collection main">ENS</span>
+              <span className="collection owner"></span>
+              <span className="collection creator"></span>
+            </p>
             
-          </p>
-          <p className="cost">
-            1 ETH <span style={{ color: "#bbb" }}>1/1</span>
-          </p>
-          <h5>Buy now</h5>
-        </div>
+            
+
+            <p className="name_image">
+              Bear #4512
+              <span className="icon_close">
+                <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
+              </span>
+              
+            </p>
+            <p className="cost">
+              1 ETH <span style={{ color: "#bbb" }}>1/1</span>
+            </p>
+            <h5>Buy now</h5>
+          </div>
         </Link>
       </div>
       <style jsx>{`

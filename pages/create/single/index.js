@@ -1,9 +1,11 @@
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import closeIcon from "../../../public/image/close.svg";
-import rarible from "../../../public/image/rarible.png";
+
 
 export default function Single() {
+
+  const unlock_content = useRef(null);
   const [nft, setSelectedNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
@@ -14,9 +16,11 @@ export default function Single() {
   const [description, setDescription] = useState();
   const [name_nft, setName_ntf] = useState();
   const [type_nft, setTypeNtf] = useState();
+  const [error_message, setErrorMessage] = useState(0);
 
   const SetMyPrice = (e) => {
     const old = my_price;
+   
     console.log(Number(e.target.value) === e.target.value);
     if (Number(e.target.value) !== "NaN") {
       setMyPrice(e.target.value);
@@ -27,10 +31,39 @@ export default function Single() {
       setMyPrice(old);
     }
   };
-
-  const CreateItem = () => {
-    console.log("Item created");
-  };
+  const baseURL = "http://localhost:5000/api";
+ 
+  async function CreateItem() {
+    const postData = {
+      file: nft,
+      name: name_nft,
+      description: description,
+      unlock_content: unlock_content.current ? 
+      unlock_content.current.valie :
+      null,
+    };
+    try {
+      const res = await fetch(`${baseURL}/item`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": "token-value",
+        },
+        body: JSON.stringify(postData),
+      });
+      if (!res.ok) {
+        const message = `An error has occured: ${res.status} - ${res.statusText}`;
+        throw new Error(message);
+      }
+      const data = await res.json();
+      
+      console.log(data.message);
+    } catch (err) {
+      setErrorMessage(1);
+      setTimeout(()=>setErrorMessage(0),2000);
+      console.log(err.message);
+    }
+  }
   const SetRoyalties = (e) => {
     let data = e.target.value;
     console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
@@ -51,7 +84,7 @@ export default function Single() {
     var file = event.target.files[0];
     setTypeNtf(file.type);
     var reader = new FileReader();
-    var url = reader.readAsDataURL(file);
+    // var url = reader.readAsDataURL(file);
     reader.onloadend = function () {
       setSelectedNft(reader.result);
       localStorage.setItem("nft", reader.result);
@@ -61,7 +94,7 @@ export default function Single() {
 
   return (
     <div className="single_main">
-      <h1>Create single item on Ethereum</h1>
+      <h1>Create single item on Oasis</h1>
       <div className="main_choose_file">
         <div className="choose_file">
           {nft ? (
@@ -165,20 +198,20 @@ export default function Single() {
           </button>
         </h3>
         <p>Content will be unlocked after successful transaction</p>
-        {unlock && (
+        {!unlock && (
           <>
             <label className="price">
               <input
                 type="text"
                 placeholder="Digital key, code to redeem or link to a file ..."
-                valie={my_price}
+                ref={unlock_content}
                 onChange={SetMyPrice}
               />
             </label>
             <p>&#34;Locked content&#34; is not allowed to be empty</p>
           </>
         )}
-        <h3>Choose collection</h3>
+        {/* <h3>Choose collection</h3>
         <div className="select collection">
           <div
             onClick={() => setPrice(0)}
@@ -202,7 +235,7 @@ export default function Single() {
             <br />
             <b>ROSE</b>
           </div>
-        </div>
+        </div> */}
         <h3 className="put_on_market">
           Free minting
           <button
@@ -247,7 +280,7 @@ export default function Single() {
           />
         </label>
         <p>With preserved line-breaks</p>
-        <label className="price royalties">
+        {/* <label className="price royalties">
           Royalties
           <input
             type="text"
@@ -256,13 +289,13 @@ export default function Single() {
             onChange={SetRoyalties}
           />
         </label>
-        <button className="show_advansed">Show advanced setting</button>
+        <button className="show_advansed">Show advanced setting</button> */}
         <div className="create_item_block">
           <button
             className={
-              royalties && name_nft ? "create_item" : "create_item disabled"
+              description && name_nft ? "create_item" : "create_item disabled"
             }
-            disabled={!(royalties && name_nft)}
+            disabled={!(description && name_nft)}
             onClick={CreateItem}
           >
             Create item
@@ -276,9 +309,13 @@ export default function Single() {
         <div className="preview_file">
           {!nft && <p>Upload file to preview your brand new NFT</p>}
         </div>
-        <div className="unlocked"></div>
+        <div className="unlocked">
+          {unlock_content.current ? unlock_content.current.value : null }
+        </div>
       </div>
-
+      <div className="error__message">
+        Sorry,try again!
+      </div>      
       <style jsx>
         {`
           p {
@@ -386,7 +423,17 @@ export default function Single() {
             border: 1px solid rgba(4, 4, 5, 0.1);
             border-radius: 15px;
             height: 100px;
-            margin-top: 30px;
+            position: relative;
+            margin-top: 60px;
+            text-align: center;
+            line-height: 100px;
+          }
+          .unlocked:before {
+            content: "Unlock content";
+            position: absolute;
+            top: -40px;
+            left: 0;
+            font: 700 20px/30px Roboto, sans-serif;
           }
 
           .preview_file:before {
@@ -561,6 +608,21 @@ export default function Single() {
             background: rgb(230, 230, 230);
             color: gray;
             cursor: not-allowed;
+          }
+          .error__message {
+            position: fixed;
+            top: 45%;
+            left: 35%;
+            height: 300px;
+            opacity: ${error_message};
+            width: 30%;
+            background: #fff;
+            z-index: 100;
+            text-align: center;
+            font-size: 50px;
+            line-height: 300px;
+            box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+            border-radius: 15px;
           }
         `}
       </style>

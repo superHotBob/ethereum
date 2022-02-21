@@ -35,10 +35,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/connect.js"
     ],
-    "/create/single": [
+    "/explore/all": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/create/single.js"
+      "static/chunks/pages/explore/all.js"
+    ],
+    "/token": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/token.js"
     ]
   },
   "ampFirstPages": []

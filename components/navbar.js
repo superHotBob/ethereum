@@ -105,7 +105,7 @@ export default function Navbar() {
           </span>
           <h2 className="hash">
               {new_str}{" "}
-              <span className="copy_hash">
+              <span className="copy_account">
                 <Image 
                   src="/static/copy.svg" 
                   width={18} 
@@ -120,7 +120,7 @@ export default function Navbar() {
             <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}  className="my__hash">
               {refresh_balance ?
               <div className="refresh">
-                <Image src={refresh} width={48} height={48} alt="refresh"   />
+                <Image src={refresh} width={45} height={45} alt="refresh"   />
               </div>:
                <>
                 Balance<br/>
@@ -303,8 +303,9 @@ export default function Navbar() {
         .refresh {
           animation: rotation 2s infinite linear;
           display: inline-block;
-          width: 48.7px;
-          height: 48.7px;
+          width: 46px;
+         
+          height: 46px;
           padding: 0;
         }
        
@@ -314,10 +315,10 @@ export default function Navbar() {
         .hash img {
             cursor: pointer;
         }
-        .copy_hash {
+        .copy_account {
           cursor: pointer;
         }
-        .copy_hash:before {
+        .copy_account:before {
           content: '${textCopy}';
           font: 500 16px/16px Roboto,sans-serif;
           background: #000;
@@ -331,7 +332,7 @@ export default function Navbar() {
           width: 150px;
           text-align: center;
         }
-        .copy_hash:hover:before {
+        .copy_account:hover:before {
           opacity: 1;
         }
         .wallet_name > button:hover {
