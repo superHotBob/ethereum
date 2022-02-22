@@ -5,7 +5,7 @@ import closeIcon from "../../../public/image/close.svg";
 
 export default function Single() {
 
-  const unlock_content = useRef(null);
+  const unlock_content = useRef('');
   const [nft, setSelectedNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
@@ -79,12 +79,17 @@ export default function Single() {
     setSelectedNft(nft_name);
     setTypeNtf(type);
   }, []);
+
   useEffect(() => localStorage.setItem("nft", nft), [nft]);
+
   const changeHandler = async (event) => {
-    var file = event.target.files[0];
+    let file = await event.target.files[0];
+    // let formData = new FormData(event);
+    
     setTypeNtf(file.type);
     var reader = new FileReader();
-    // var url = reader.readAsDataURL(file);
+   var url = reader.readAsDataURL(file);
+   
     reader.onloadend = function () {
       setSelectedNft(reader.result);
       localStorage.setItem("nft", reader.result);
@@ -105,20 +110,21 @@ export default function Single() {
                   src={closeIcon}
                   width="40px"
                   height="40px"
-                  onClick={() => setSelectedNft("")}
+                  onClick={() => setSelectedNft('')}
                 />
               </h5>
               {type_nft !== "video/mp4" ? (
                 <img src={nft} alt="image_nft" />
-              ) : (
-                <video width="400" controls>
-                  <source src={selectedFile} type="video/mp4" />
-                </video>
+                ) : (
+                  <video width="400" controls>
+                    <source src={selectedFile} type="video/mp4" />
+                  </video>
               )}
             </div>
           ) : (
             <>
               <p>PNG, GIF, WEBP, MP4 or MP3. Max 100mb.</p>
+              <form>
               <label>
                 Choose File
                 <input
@@ -129,10 +135,11 @@ export default function Single() {
                   onChange={changeHandler}
                 />
               </label>
+              </form>
             </>
           )}
         </div>
-        <h3 className="put_on_market">
+        {/* <h3 className="put_on_market">
           Put on marketplace
           <button
             className={putMarket ? "left" : "right"}
@@ -141,7 +148,7 @@ export default function Single() {
             <b className={putMarket ? "left_b" : "right_b"}></b>
           </button>
         </h3>
-        <p>Enter price to allow users instantly purchase your NFT</p>
+        <p>Enter price to allow users instantly purchase your NFT</p> */}
         {/* <div className="select">
           <span
             onClick={() => setPrice(0)}
@@ -188,7 +195,7 @@ export default function Single() {
             <p>You recieve </p>
           </>
         ) : null} */}
-        <h3 className="put_on_market unlock">
+        {/* <h3 className="put_on_market unlock">
           Unlock once purchased
           <button
             className={unlock ? "left" : "right"}
@@ -197,7 +204,7 @@ export default function Single() {
             <b className={unlock ? "left_b" : "right_b"}></b>
           </button>
         </h3>
-        <p>Content will be unlocked after successful transaction</p>
+        <p>Content will be unlocked after successful transaction</p> */}
         {!unlock && (
           <>
             <label className="price">
@@ -236,7 +243,7 @@ export default function Single() {
             <b>ROSE</b>
           </div>
         </div> */}
-        <h3 className="put_on_market">
+        {/* <h3 className="put_on_market">
           Free minting
           <button
             className={minting ? "left" : "right"}
@@ -245,7 +252,7 @@ export default function Single() {
             <b className={minting ? "left_b" : "right_b"}></b>
           </button>
         </h3>
-        <p>Buyer will pay gas fees for minting</p>
+        <p>Buyer will pay gas fees for minting</p> */}
 
         <label className="price">
           <span>Name</span>
@@ -309,9 +316,9 @@ export default function Single() {
         <div className="preview_file">
           {!nft && <p>Upload file to preview your brand new NFT</p>}
         </div>
-        <div className="unlocked">
+        {/* <div className="unlocked">
           {unlock_content.current ? unlock_content.current.value : null }
-        </div>
+        </div> */}
       </div>
       <div className="error__message">
         Sorry,try again!

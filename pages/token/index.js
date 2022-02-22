@@ -6,19 +6,19 @@ import { NFTE } from "@nfte/react";
 export default function Token() {
   const [data, setData] = useState("");
   const [menu, selectMenu] = useState("Owners");
-  useEffect(() => {
-    async function get() {
-      fetch(
-        "https://nfte.app/api/nft-data?contract=0x3b3ee1931dc30c1957379fac9aba94d1c48a5405&tokenId=45"
-      )
-        .then((response) => response.json())
-        .then((responce) => {
-          setData(responce);
-          console.log(responce);
-        });
-    }
-    get();
-  }, []);
+  // useEffect(() => {
+  //   async function get() {
+  //     fetch(
+  //       "http://testnet.explorer.emerald.oasis.dev/api?module=token&action=getTokenHolders&contractaddress=0x9764e39a7142E9c5AabA4EFF53C1329B3dE335C0"
+  //     )
+  //       .then((response) => response.json())
+  //       .then((responce) => {
+  //         setData(responce);
+  //         console.log(responce);
+  //       });
+  //   }
+  //   get();
+  // }, []);
   return (
     <>
       {data ? (
