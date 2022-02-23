@@ -15,7 +15,7 @@ export default function Single() {
   const str = useSelector(hash);
   const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDRmODNkQTc1ODYxNzU4YzFEMjRhMEM4RTg4QjNmMzhlYjM3ODdCNDUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0NTUwNzc5MzI5OSwibmFtZSI6Im5mdCJ9.3EZe3Bcxay2KRSW4aJLOHhovrZYMbR6UMrks9GscKV8';
   const unlock_content = useRef('');
-  const [nft, setSelectedNft] = useState();
+  const [image_nft, setSelectedNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
   const [putMarket, setPutMarket] = useState(true);
@@ -39,7 +39,7 @@ export default function Single() {
       setMyPrice(old);
     }
   };
-  const baseURL = "http://localhost:5000/api";
+  // const baseURL = "http://localhost:5000/api";
   function storeNFT() {     
       const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY })     
       
@@ -50,8 +50,8 @@ export default function Single() {
    async function CreateItem() {
     const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });  
     const metadata = await nftstorage.store({
-      image: new File([nft],'panda.jpg',{ type: 'image/jpg' }),
-      name:name_nft,
+      image: new File([image_nft],'panda.jpg',{ type: 'image/jpg' }),
+      name: name_nft,
       description: description,
     });
     console.log(metadata.url);
@@ -68,7 +68,7 @@ export default function Single() {
   
 
     web3.eth.sendTransaction({ 
-      from: '0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f',
+      from: window.ethereum.selectedAddress,
       to: contractAddress,         
       data: Mydata})
       .on('receipt', console.log)
@@ -140,7 +140,7 @@ export default function Single() {
     setTypeNtf(type);
   }, []);
 
-  useEffect(() => localStorage.setItem("nft", nft), [nft]);
+  useEffect(() => localStorage.setItem("nft", image_nft), [image_nft]);
 
   const changeHandler = async (event) => {
     let file = await event.target.files[0];
@@ -152,17 +152,17 @@ export default function Single() {
    
     reader.onloadend = function () {
       setSelectedNft(reader.result);
-      localStorage.setItem("nft", reader.result);
+      localStorage.setItem("image_nft", reader.result);
       localStorage.setItem("type_nft", file.type);
     };
   };
 
   return (
     <div className="single_main">
-      <h1>Create single item on Oasis {str} </h1>
+      <h1>Create single item on Oasis  </h1>
       <div className="main_choose_file">
         <div className="choose_file">
-          {nft ? (
+          {image_nft ? (
             <div>
               <h5 className="icon_close">
                 <Image
@@ -376,7 +376,7 @@ export default function Single() {
       </div>
       <div className="preview__unlocked">
         <div className="preview_file">
-          {!nft && <p>Upload file to preview your brand new NFT</p>}
+          {!image_nft && <p>Upload file to preview your brand new NFT</p>}
         </div>
         {/* <div className="unlocked">
           {unlock_content.current ? unlock_content.current.value : null }
@@ -416,7 +416,7 @@ export default function Single() {
           .main_image {
             width: 100%;
             height: 500px;
-            background-image: url(${nft});
+            background-image: url(${image_nft});
             background-repeat: no-repeat;
             background-size: auto 100%;
             background-position: center; 
@@ -442,7 +442,7 @@ export default function Single() {
             content: '"File" is required';
             position: absolute;
             top: 101%;
-            display: ${nft ? "none" : "block"};
+            display: ${image_nft ? "none" : "block"};
             left: 0;
             color: red;
             font: 500 16px/30px Roboto, sans-serif;
@@ -494,7 +494,7 @@ export default function Single() {
             margin-top: 50px;
           }
           .preview_file {
-            background-image: url(${nft});
+            background-image: url(${image_nft});
             background-position: center 20%;
             background-repeat: no-repeat;
             background-size: 100%;
