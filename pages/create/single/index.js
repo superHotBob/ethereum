@@ -1,10 +1,19 @@
 import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import closeIcon from "../../../public/image/close.svg";
+import {  useSelector } from "react-redux";
+import { hash } from "../../../reduser";
+import Web3 from "web3";
+
+import { NFTStorage, File } from 'nft.storage';
+const contractABI = require( "../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
+const Contract = require('web3-eth-contract');
+const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
 
 
 export default function Single() {
-
+  const str = useSelector(hash);
+  const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDRmODNkQTc1ODYxNzU4YzFEMjRhMEM4RTg4QjNmMzhlYjM3ODdCNDUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0NTUwNzc5MzI5OSwibmFtZSI6Im5mdCJ9.3EZe3Bcxay2KRSW4aJLOHhovrZYMbR6UMrks9GscKV8';
   const unlock_content = useRef('');
   const [nft, setSelectedNft] = useState();
   const [price, setPrice] = useState(0);
@@ -19,8 +28,7 @@ export default function Single() {
   const [error_message, setErrorMessage] = useState(0);
 
   const SetMyPrice = (e) => {
-    const old = my_price;
-   
+    const old = my_price;   
     console.log(Number(e.target.value) === e.target.value);
     if (Number(e.target.value) !== "NaN") {
       setMyPrice(e.target.value);
@@ -32,37 +40,89 @@ export default function Single() {
     }
   };
   const baseURL = "http://localhost:5000/api";
- 
-  async function CreateItem() {
-    const postData = {
-      file: nft,
-      name: name_nft,
-      description: description,
-      unlock_content: unlock_content.current ? 
-      unlock_content.current.valie :
-      null,
-    };
-    try {
-      const res = await fetch(`${baseURL}/item`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": "token-value",
-        },
-        body: JSON.stringify(postData),
-      });
-      if (!res.ok) {
-        const message = `An error has occured: ${res.status} - ${res.statusText}`;
-        throw new Error(message);
-      }
-      const data = await res.json();
+  function storeNFT() {     
+      const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY })     
       
-      console.log(data.message);
-    } catch (err) {
-      setErrorMessage(1);
-      setTimeout(()=>setErrorMessage(0),2000);
-      console.log(err.message);
-    }
+  };
+   
+   const web3 = new Web3(Web3.givenProvider);
+
+   async function CreateItem() {
+    const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });  
+    const metadata = await nftstorage.store({
+      image: new File([nft],'panda.jpg',{ type: 'image/jpg' }),
+      name:name_nft,
+      description: description,
+    });
+    console.log(metadata.url);
+    const contractAddress = '0x9764e39a7142E9c5AabA4EFF53C1329B3dE335C0';
+    const Mycontract = await new Contract(contractABI.abi, contractAddress);        
+    // const transactionParameters = {
+    //   to: res.contractAddress, // Required except during contract publications.         
+    //   from: window.ethereum.selectedAddress, // must match user's active address.         
+    const Mydata =  Mycontract.methods.mintNFT(window.ethereum.selectedAddress, metadata.url).encodeABI();
+      
+    
+   
+ 
+  
+
+    web3.eth.sendTransaction({ 
+      from: '0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f',
+      to: contractAddress,         
+      data: Mydata})
+      .on('receipt', console.log)
+      .on('error', console.error);
+    // const postData = {
+    //   file: nft,
+    //   address: str,
+    //   name: name_nft,
+    //   description: description,
+    //   unlock_content: unlock_content.current ? 
+    //   unlock_content.current.valie :
+    //   null,
+    // };
+    // try {
+    //   const res = await fetch(`${baseURL}/item`, {
+    //     method: "post",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-access-token": "token-value",
+    //     },
+    //     body: JSON.stringify(postData),
+    //   })
+    //   .then(res =>res.json());
+      
+       
+    //     // try {
+    //     //     const txHash =  await window.ethereum
+    //     //         .request({
+    //     //             method: 'eth_sendTransaction',
+    //     //             params: [transactionParameters],
+    //     //         });
+    //     //     return {
+    //     //         success: true,
+    //     //         status: console.log("✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash)
+    //     //     }
+    //     // } catch (error) {
+    //     //     return {
+    //     //         success: false,
+    //     //         status: console.log("😥 Something went wrong: " + error.message)
+                
+    //     //     }
+        
+    //     // }
+              
+        
+    
+
+
+      
+    // } catch (err) {
+    //   setErrorMessage(1);
+    //   setTimeout(()=>setErrorMessage(0),2000);
+    //   console.log(err);
+    // }
   }
   const SetRoyalties = (e) => {
     let data = e.target.value;
@@ -88,7 +148,7 @@ export default function Single() {
     
     setTypeNtf(file.type);
     var reader = new FileReader();
-   var url = reader.readAsDataURL(file);
+    var url = reader.readAsDataURL(file);
    
     reader.onloadend = function () {
       setSelectedNft(reader.result);
@@ -99,7 +159,7 @@ export default function Single() {
 
   return (
     <div className="single_main">
-      <h1>Create single item on Oasis</h1>
+      <h1>Create single item on Oasis {str} </h1>
       <div className="main_choose_file">
         <div className="choose_file">
           {nft ? (
@@ -114,7 +174,8 @@ export default function Single() {
                 />
               </h5>
               {type_nft !== "video/mp4" ? (
-                <img src={nft} alt="image_nft" />
+                <div className="main_image">
+                  </div> 
                 ) : (
                   <video width="400" controls>
                     <source src={selectedFile} type="video/mp4" />
@@ -139,6 +200,7 @@ export default function Single() {
             </>
           )}
         </div>
+
         {/* <h3 className="put_on_market">
           Put on marketplace
           <button
@@ -300,9 +362,9 @@ export default function Single() {
         <div className="create_item_block">
           <button
             className={
-              description && name_nft ? "create_item" : "create_item disabled"
+              (description && name_nft) && str ? "create_item" : "create_item disabled"
             }
-            disabled={!(description && name_nft)}
+            disabled={!((description && name_nft) && str)}
             onClick={CreateItem}
           >
             Create item
@@ -351,6 +413,14 @@ export default function Single() {
             width: 62%;
             display: inline-block;
           }
+          .main_image {
+            width: 100%;
+            height: 500px;
+            background-image: url(${nft});
+            background-repeat: no-repeat;
+            background-size: auto 100%;
+            background-position: center; 
+          }
           .choose_file {
             text-align: center;
             position: relative;
@@ -376,6 +446,12 @@ export default function Single() {
             left: 0;
             color: red;
             font: 500 16px/30px Roboto, sans-serif;
+          }
+          button:active {
+            transform: scale(0.98);
+            /* Scaling button to 0.98 to its original size */
+            box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+            /* Lowering the shadow */
           }
           input[type="file"] {
             display: none;
