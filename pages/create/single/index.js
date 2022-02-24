@@ -4,11 +4,12 @@ import closeIcon from "../../../public/image/close.svg";
 import { useSelector } from "react-redux";
 import { hash } from "../../../reduser";
 import Web3 from "web3";
-
 import { NFTStorage, File } from "nft.storage";
 const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const Contract = require("web3-eth-contract");
-const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
+// const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
+
+const contractAddress = "0x138e8834275ADc812b2C15bCA1c056f6782FdCB7";
 
 export default function Single() {
   const str = useSelector(hash);
@@ -44,27 +45,31 @@ export default function Single() {
   const web3 = new Web3(Web3.givenProvider);
 
   async function CreateItem() {
+
     const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+
     const metadata = await nftstorage.store({
       image: new File([image_nft], "panda.jpg", { type: "image/jpg" }),
       name: name_nft,
       description: description,
     });
-    console.log(metadata.url);
-    const contractAddress = "0x482bD09546f69558636D278f8Acd52c2b43B9411";
+
+    console.log('This is metadataUrl', metadata.url);
+
+   
     const Mycontract = await new Contract(contractABI.abi, contractAddress);
     // const transactionParameters = {
     //   to: res.contractAddress, // Required except during contract publications.
     //   from: window.ethereum.selectedAddress, // must match user's active address.
     const Mydata = Mycontract.methods
       .mintNFT(window.ethereum.selectedAddress, metadata.url).encodeABI();
-      
-
+    // const my_nonce = await web3.eth.getTransactionCount(window.ethereum.selectedAddress, 'latest');
+    // console.log('This is nonce',my_nonce);  
+    // console.log('This is contract data', Mydata);
     web3.eth
       .sendTransaction({
         from: window.ethereum.selectedAddress,
         to: contractAddress,        
-        gas: 21000,
         data: Mydata,
       })
       .on("receipt", console.log)
@@ -113,7 +118,7 @@ export default function Single() {
     //   setTimeout(()=>setErrorMessage(0),2000);
     //   console.log(err);
     // }
-  }
+  };
   const SetRoyalties = (e) => {
     let data = e.target.value;
     console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
