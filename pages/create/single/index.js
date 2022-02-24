@@ -1,20 +1,20 @@
 import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import closeIcon from "../../../public/image/close.svg";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { hash } from "../../../reduser";
 import Web3 from "web3";
 
-import { NFTStorage, File } from 'nft.storage';
-const contractABI = require( "../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-const Contract = require('web3-eth-contract');
+import { NFTStorage, File } from "nft.storage";
+const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
+const Contract = require("web3-eth-contract");
 const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
-
 
 export default function Single() {
   const str = useSelector(hash);
-  const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDRmODNkQTc1ODYxNzU4YzFEMjRhMEM4RTg4QjNmMzhlYjM3ODdCNDUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0NTUwNzc5MzI5OSwibmFtZSI6Im5mdCJ9.3EZe3Bcxay2KRSW4aJLOHhovrZYMbR6UMrks9GscKV8';
-  const unlock_content = useRef('');
+  const NFT_STORAGE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDRmODNkQTc1ODYxNzU4YzFEMjRhMEM4RTg4QjNmMzhlYjM3ODdCNDUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0NTUwNzc5MzI5OSwibmFtZSI6Im5mdCJ9.3EZe3Bcxay2KRSW4aJLOHhovrZYMbR6UMrks9GscKV8";
+  const unlock_content = useRef("");
   const [image_nft, setSelectedNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
@@ -28,7 +28,7 @@ export default function Single() {
   const [error_message, setErrorMessage] = useState(0);
 
   const SetMyPrice = (e) => {
-    const old = my_price;   
+    const old = my_price;
     console.log(Number(e.target.value) === e.target.value);
     if (Number(e.target.value) !== "NaN") {
       setMyPrice(e.target.value);
@@ -40,45 +40,40 @@ export default function Single() {
     }
   };
   // const baseURL = "http://localhost:5000/api";
-  function storeNFT() {     
-      const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY })     
-      
-  };
-   
-   const web3 = new Web3(Web3.givenProvider);
 
-   async function CreateItem() {
-    const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });  
+  const web3 = new Web3(Web3.givenProvider);
+
+  async function CreateItem() {
+    const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
     const metadata = await nftstorage.store({
-      image: new File([image_nft],'panda.jpg',{ type: 'image/jpg' }),
+      image: new File([image_nft], "panda.jpg", { type: "image/jpg" }),
       name: name_nft,
       description: description,
     });
     console.log(metadata.url);
-    const contractAddress = '0x9764e39a7142E9c5AabA4EFF53C1329B3dE335C0';
-    const Mycontract = await new Contract(contractABI.abi, contractAddress);        
+    const contractAddress = "0x482bD09546f69558636D278f8Acd52c2b43B9411";
+    const Mycontract = await new Contract(contractABI.abi, contractAddress);
     // const transactionParameters = {
-    //   to: res.contractAddress, // Required except during contract publications.         
-    //   from: window.ethereum.selectedAddress, // must match user's active address.         
-    const Mydata =  Mycontract.methods.mintNFT(window.ethereum.selectedAddress, metadata.url).encodeABI();
+    //   to: res.contractAddress, // Required except during contract publications.
+    //   from: window.ethereum.selectedAddress, // must match user's active address.
+    const Mydata = Mycontract.methods
+      .mintNFT(window.ethereum.selectedAddress, metadata.url).encodeABI();
       
-    
-   
- 
-  
 
-    web3.eth.sendTransaction({ 
-      from: window.ethereum.selectedAddress,
-      to: contractAddress,         
-      data: Mydata})
-      .on('receipt', console.log)
-      .on('error', console.error);
+    web3.eth
+      .sendTransaction({
+        from: window.ethereum.selectedAddress,
+        to: contractAddress,
+        data: Mydata,
+      })
+      .on("receipt", console.log)
+      .on("error", console.error);
     // const postData = {
     //   file: nft,
     //   address: str,
     //   name: name_nft,
     //   description: description,
-    //   unlock_content: unlock_content.current ? 
+    //   unlock_content: unlock_content.current ?
     //   unlock_content.current.valie :
     //   null,
     // };
@@ -92,8 +87,7 @@ export default function Single() {
     //     body: JSON.stringify(postData),
     //   })
     //   .then(res =>res.json());
-      
-       
+
     //     // try {
     //     //     const txHash =  await window.ethereum
     //     //         .request({
@@ -108,16 +102,11 @@ export default function Single() {
     //     //     return {
     //     //         success: false,
     //     //         status: console.log("😥 Something went wrong: " + error.message)
-                
+
     //     //     }
-        
+
     //     // }
-              
-        
-    
 
-
-      
     // } catch (err) {
     //   setErrorMessage(1);
     //   setTimeout(()=>setErrorMessage(0),2000);
@@ -145,11 +134,11 @@ export default function Single() {
   const changeHandler = async (event) => {
     let file = await event.target.files[0];
     // let formData = new FormData(event);
-    
+
     setTypeNtf(file.type);
     var reader = new FileReader();
     var url = reader.readAsDataURL(file);
-   
+
     reader.onloadend = function () {
       setSelectedNft(reader.result);
       localStorage.setItem("image_nft", reader.result);
@@ -159,7 +148,7 @@ export default function Single() {
 
   return (
     <div className="single_main">
-      <h1>Create single item on Oasis  </h1>
+      <h1>Create single item on Oasis </h1>
       <div className="main_choose_file">
         <div className="choose_file">
           {image_nft ? (
@@ -170,32 +159,31 @@ export default function Single() {
                   src={closeIcon}
                   width="40px"
                   height="40px"
-                  onClick={() => setSelectedNft('')}
+                  onClick={() => setSelectedNft("")}
                 />
               </h5>
               {type_nft !== "video/mp4" ? (
-                <div className="main_image">
-                  </div> 
-                ) : (
-                  <video width="400" controls>
-                    <source src={selectedFile} type="video/mp4" />
-                  </video>
+                <div className="main_image"></div>
+              ) : (
+                <video width="400" controls>
+                  <source src={selectedFile} type="video/mp4" />
+                </video>
               )}
             </div>
           ) : (
             <>
               <p>PNG, GIF, WEBP, MP4 or MP3. Max 100mb.</p>
               <form>
-              <label>
-                Choose File
-                <input
-                  type="file"
-                  id="file"
-                  name="file"
-                  accept="image/png, image/gif,image/webp, image/jpeg,video/mp4"
-                  onChange={changeHandler}
-                />
-              </label>
+                <label>
+                  Choose File
+                  <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept="image/png, image/gif,image/webp, image/jpeg,video/mp4"
+                    onChange={changeHandler}
+                  />
+                </label>
               </form>
             </>
           )}
@@ -362,9 +350,11 @@ export default function Single() {
         <div className="create_item_block">
           <button
             className={
-              (description && name_nft) && str ? "create_item" : "create_item disabled"
+              description && name_nft && str
+                ? "create_item"
+                : "create_item disabled"
             }
-            disabled={!((description && name_nft) && str)}
+            disabled={!(description && name_nft && str)}
             onClick={CreateItem}
           >
             Create item
@@ -382,9 +372,7 @@ export default function Single() {
           {unlock_content.current ? unlock_content.current.value : null }
         </div> */}
       </div>
-      <div className="error__message">
-        Sorry,try again!
-      </div>      
+      <div className="error__message">Sorry,try again!</div>
       <style jsx>
         {`
           p {
@@ -419,7 +407,7 @@ export default function Single() {
             background-image: url(${image_nft});
             background-repeat: no-repeat;
             background-size: auto 100%;
-            background-position: center; 
+            background-position: center;
           }
           .choose_file {
             text-align: center;
