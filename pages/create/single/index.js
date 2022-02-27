@@ -260,7 +260,7 @@ export default function Single() {
                     type="file"
                     id="file"
                     name="file"
-                    accept="image/png, image/gif,image/webp, image/jpeg,video/mp4"
+                    accept="image/png, image/gif, image/webp, image/jpeg,video/mp4"
                     onChange={viewImage}
                   />
                 </label>

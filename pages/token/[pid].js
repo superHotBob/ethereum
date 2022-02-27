@@ -1,11 +1,9 @@
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { tokenId , setTokenId} from "../../reduser";
-import { useRouter } from 'next/router'
-
+import { tokenId, setTokenId } from "../../reduser";
+import Image from "next/image";
 import Web3 from "web3";
-
+import myAwait from "../../public/image/await.gif";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
 const Contract = require("web3-eth-contract");
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
@@ -13,73 +11,47 @@ const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 export default function Token() {
   const dispatch = useDispatch();
   const Id = useSelector(tokenId);
-  // const { asPath, pathname } = useRouter();
-  // const [newId, setNewId] = useState(Id);
- 
-  useEffect(()=> {
-    let st = window.location.href;
-    let leng = window.location.href.lastIndexOf('/');
-    let nesd = Number(st.substr(leng + 1,1000));
-    dispatch(setTokenId(nesd));
-    
-    console.log(nesd);
+
+  useEffect(() => {
+    let link = window.location.href;
+    let leng = link.lastIndexOf("/");
+    let tokenId = Number(link.substr(leng + 1, 1000));
+    dispatch(setTokenId(tokenId));
     setTimeout(() => {
-      nesd === 0 ? console.log('error', nesd) : ReadToken();
+      tokenId === 0 ? console.log("error", tokenId) : ReadToken();
       async function ReadToken() {
-        const my_owner = await contract.methods.ownerOf(nesd).call();
+        const my_owner = await contract.methods.ownerOf(tokenId).call();
         setOwner(my_owner);
-        const owner = await contract.methods.tokenURI(nesd).call();
+        const owner = await contract.methods.tokenURI(tokenId).call();
         fetch(`https://ipfs.io/ipfs/${owner}`, {
-          method: 'get'
+          method: "get",
         })
-        .then(res =>res.json())
-        .then(res => setData(prevState=>({...prevState,...res})));
-       
-      };
-     
-      
-    }, 1000);
+          .then((res) => res.json())
+          .then((res) => setData((prevState) => ({ ...prevState, ...res })));
+      }
+    }, 100);
+  }, []);
 
-  }
-  ,[]);
+  const web3 = new Web3(Web3.givenProvider);
 
- 
-  const web3 = new Web3(Web3.givenProvider);  
-  
-  
   const [data, setData] = useState();
   const [owner, setOwner] = useState();
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
-  // useEffect(()=>{ 
-   
-   
-    
-  // },[]);
 
-// useEffect(() => {
-
-  //   const new_data = {
-  //     // name: localStorage.getItem("name"),
-  //     // description: localStorage.getItem("description"),
-  //     type: localStorage.getItem("type_nft"),
-  //     // mediaUrl: localStorage.getItem("nft"),
-  //   };
-  //   setData((prevstate) => ({ ...prevstate, ...new_data }));
-  // }, []);
-
-  // const [data, setData] = useState();
   const [menu, selectMenu] = useState("Owners");
   const [account, setAccount] = useState();
   const [result, setResult] = useState("");
 
   async function mintNFT() {
+    let link = window.location.href;
+    let leng = link.lastIndexOf("/");
+    let tokenId = Number(link.substr(leng + 1, 1000));
     window.contract = await new Contract(contractABI.abi, contractAddress);
-
     const transactionParameters = {
       to: contractAddress,
       from: window.ethereum.selectedAddress,
       data: window.contract.methods
-        .safeTransferFrom(window.ethereum.selectedAddress, account, myTokenId)
+        .safeTransferFrom(window.ethereum.selectedAddress, account, tokenId)
         .encodeABI(),
     };
     try {
@@ -99,43 +71,13 @@ export default function Token() {
     }
   }
 
-  // useEffect(() => {
-  //   const new_data = {
-  //     'name':  localStorage.getItem("name_nft"),
-  //     'description': localStorage.getItem("description"),
-  //     'type': localStorage.getItem("type_nft"),
-  //     'mediaUrl': localStorage.getItem("nft")
-
-  //   };
-  //   setData(prevState=>({...prevState, 'mediaUrl': localStorage.getItem("nft")}));
-  //   console.log('This is data',data);
-  //   },[]);
-  // async function get() {
-  //   fetch(
-  //     "https://nfte.app/api/nft-data?contract=0x3b3ee1931dc30c1957379fac9aba94d1c48a5405&tokenId=45"
-  //   )
-  //     .then((response) => response.json())
-  //     .then((responce) => {
-  //       setData(responce);
-  //       console.log(responce);
-  //     });
-  // }
-  // get();
-
   return (
-    <>
+    <div className="token__main__block">
       {data ? (
-        <div className="token__main__block">
+        <>
           <div className="image__block">
             {data.type !== "video/mp4" ? (
-              <div className="center_block">
-                <Image
-                  src={data.image}
-                  
-                  layout="fill"
-                  alt="media"
-                />
-              </div>
+              <div className="center_block" />
             ) : (
               <video
                 width="600"
@@ -194,10 +136,6 @@ export default function Token() {
             </div> */}
           </div>
           <style jsx>{`
-            .token__main__block {
-              margin: 100px auto;
-              width: 90%;
-            }
             .video {
               display: block;
               margin: 80px auto 0;
@@ -241,8 +179,12 @@ export default function Token() {
               width: auto;
               text-align: center;
               position: relative;
-              height: 60vh;  
+              height: 60vh;
               margin: 50px auto;
+              background-size: auto 70%;
+              background-repeat: no-repeat;
+              background-position: center 40%;
+              background-image: url(${data.image});
             }
 
             .title__block {
@@ -277,8 +219,12 @@ export default function Token() {
               display: inline-block;
             }
           `}</style>
-        </div>
-      ) : null}
-    </>
+        </>
+      ) : (
+        <h1 style={{ margin: "40vh auto", width: 150 }}>
+          <Image src={myAwait} width={100} height={100} alt="await" />{" "}
+        </h1>
+      )}
+    </div>
   );
 }

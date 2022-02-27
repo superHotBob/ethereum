@@ -152,7 +152,6 @@ export default function ExploreAll() {
           border-radius: 15px;
           text-align: center;
           position: relative;
-
           background-size: auto 70%;
           background-repeat: no-repeat;
           background-position: center 40%;

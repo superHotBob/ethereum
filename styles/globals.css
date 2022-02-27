@@ -40,3 +40,7 @@ button:active {
   color: gray;
   cursor: not-allowed;
 }
+.token__main__block {
+  margin: 130px auto;
+  width: 90%;
+}
