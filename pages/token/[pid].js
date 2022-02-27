@@ -126,7 +126,7 @@ export default function Token() {
     <>
       {data ? (
         <div className="token__main__block">
-          <div className="image__block">{asPath}
+          <div className="image__block">
             {data.type !== "video/mp4" ? (
               <div className="center_block">
                 <Image
