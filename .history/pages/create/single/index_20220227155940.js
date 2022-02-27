@@ -101,7 +101,7 @@ export default function Single() {
               .then(res=>{ 
                 let id = web3.utils.hexToNumber(res.logs[1].topics[3]);              
                 console.log(id);
-                // dispatch(setTokenId(id));
+                dispatch(setTokenId(id));
                 Router.push(`/token/${id}`);
 
              

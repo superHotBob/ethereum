@@ -98,12 +98,10 @@ export default function Single() {
                 to: contractAddress,        
                 data: Mydata,
               })
-              .then(res=>{ 
-                let id = web3.utils.hexToNumber(res.logs[1].topics[3]);              
-                console.log(id);
-                // dispatch(setTokenId(id));
-                Router.push(`/token/${id}`);
-
+              .then(res=>{               
+                console.log(web3.utils.hexToNumber(res.logs[1].topics[3]));
+                dispatch(setTokenId(web3.utils.hexToNumber(res.logs[1].topics[3])));
+                Router.push(`/token/${id}`);              
              
               })
               .then(err=>console.log(err));

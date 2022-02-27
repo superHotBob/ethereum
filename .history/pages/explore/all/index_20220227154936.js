@@ -1,10 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
 const Contract = require("web3-eth-contract");
+import { setTokenId, tokenId } from "../../../reduser";
+import { urlObjectKeys } from "next/dist/shared/lib/utils";
 
 export default function ExploreAll() {
   const [metadata, setImage] = useState([]);
@@ -12,72 +15,72 @@ export default function ExploreAll() {
   const dispatch = useDispatch();
   const web3 = new Web3(Web3.givenProvider);
 
-  const ids = [2, 3, 4, 5, 6];
+  const ids = [2,3,4];
 
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
   useEffect(() => {
+
     async function tokensList() {
       const list = await contract.methods.fetchMarketItems().call();
-      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
-      setTokenId((tokenId) => [...tokenId, new_list]);
+      const new_list = list.map(i => i.tokenId);
+      setTokenId(tokenId => [...tokenId,new_list]);
 
-      async function ReadToken() {
-        console.log(tokenId);
-        for (const i of new_list) {
-          const owner = await contract.methods.tokenURI(i).call();
-          let data = await fetch(`https://ipfs.io/ipfs/${owner}`, {
-            method: "get",
-          })
-            .then((res) => res.json())
-            .then((res) => res);
-          setImage((metadata) => [
-            ...metadata,
-            {
-              name: data.name,
-              description: data.description,
-              image: data.image,
-              id: i,
-            },
-          ]);
-        }
+
+     
+      
+   
+    async function ReadToken() {
+      for (const i of tokenId) {
+        const owner = await contract.methods.tokenURI(Number(i)).call();
+        let data = await fetch(`https://ipfs.io/ipfs/${owner}`, {
+          method: "get",
+        })
+        .then((res) => res.json())      
+        .then((res) => res);
+        setImage(metadata => 
+          [...metadata,{name:data.name,description:data.description,image:data.image,id: i}]
+        );
       }
-      ReadToken();
-    }
+    };
+    ReadToken();
+    };
     tokensList();
+    
+    
   }, []);
-  // setTimeout(()=>console.log('This is tokens', tokenId),2000);
+  setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>Explore ALL NFTs </h1>
-      {metadata.length > 0 && (
+      <h1>Explore ALL NFTs  </h1>     
+      {metadata.length > 0 &&        
         <div className="all_nft">
-          {metadata.map((i) => (
-            <Link href={`/token/${i.id}`} key={i.name}>
-              <a>
-                <div
-                  style={{ backgroundImage: `url(${i.image})` }}
-                  className="image_block"
-                >
-                  {/* <p className="bolls">
+               {metadata.map(i =>
+              <Link href={`/token/${i.id}`} key={i.name}>
+                <a>
+                  <div style={{backgroundImage: `url(${i.image})`}} className="image_block">
+                    {/* <p className="bolls">
                       <span className="collection main">ENS</span>
                       <span className="collection owner"></span>
                       <span className="collection creator"></span>
                     </p> */}
-                  tokenId:{i.id}
-                  <h3 className="name_image">
-                    {i.name}
-                    {/* <span className="icon_close">
+                    tokenId:{i.id}
+
+                    <h3 className="name_image">
+                      {i.name}
+                      {/* <span className="icon_close">
                         <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
                       </span> */}
-                  </h3>
-                  <p className="cost">{i.description}</p>
-                </div>
-              </a>
-            </Link>
-          ))}
-        </div>
-      )}
+                    </h3>
+
+                    <p className="cost">{i.description}</p>
+                  </div>
+                </a>
+              </Link>
+               )}
+        </div>  
+         
+      }
       <style jsx>{`
         p,
         h5 {
@@ -88,12 +91,7 @@ export default function ExploreAll() {
           margin: 200px auto;
           width: 90%;
         }
-        .all_nft {
-          display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          align-content: flex-start;
-        }
+
         .collection {
           display: inline-block;
           width: 40px;
@@ -142,17 +140,16 @@ export default function ExploreAll() {
           top: -70px;
         }
         .image_block {
-          width: 28vw;
+          width: 25vw;
           height: 30vw;
           padding: 20px;
-          margin-top: 20px;
           margin-right: 20px;
           display: inline-block;
           border: 1px solid #bbb;
           border-radius: 15px;
           text-align: center;
           position: relative;
-
+         
           background-size: auto 70%;
           background-repeat: no-repeat;
           background-position: center 40%;
@@ -160,7 +157,7 @@ export default function ExploreAll() {
         .name_image {
           text-align: center;
 
-          margin-top: 90%;
+          margin-top: 104%;
           font: 700 18px/18px Roboto, sans-serif;
         }
         .name_image img {
