@@ -13,7 +13,7 @@ const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 export default function Token() {
   const dispatch = useDispatch();
   const Id = useSelector(tokenId);
-  const { asPath, pathname } = useRouter();
+  // const { asPath, pathname } = useRouter();
   // const [newId, setNewId] = useState(Id);
  
   useEffect(()=> {
