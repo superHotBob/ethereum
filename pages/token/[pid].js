@@ -50,7 +50,7 @@ export default function Token() {
   const [data, setData] = useState();
   const [owner, setOwner] = useState();
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
-  const [menu, selectMenu] = useState("Owners");
+  const [menu, selectMenu] = useState("Owner");
   const [account, setAccount] = useState();
   const [result, setResult] = useState("");
 
@@ -110,8 +110,8 @@ export default function Token() {
             <h3>Token Id: {id}</h3>
             {/* <p className="creator">{data.creatorOf}</p> */}
             <p className="menu">
-              <span className="Owners" onClick={() => selectMenu("Owners")}>
-                Owners
+              <span className="Owner"  onClick={() => selectMenu("Owner")}>
+                Owner
               </span>
               {/* <span className="Details" onClick={() => selectMenu("Details")}>
                 Details
@@ -120,7 +120,7 @@ export default function Token() {
                 History
               </span>
             </p>
-            <h3>{owner}</h3>
+            <h3>{menu === 'Owner' ? owner : ' '}</h3>
            
             { viewTransfer && 
               <>
@@ -180,6 +180,8 @@ export default function Token() {
             }
             .${menu} {
               color: #000;
+              padding-bottom: 17.2px;
+              border-bottom: 3px solid #000;
             }
             .menu span {
               margin-right: 30px;
@@ -192,6 +194,9 @@ export default function Token() {
               width: 60%;
               height: 60vh;
               padding: 0 200px;
+            }
+            .active {
+              color: black;
             }
             .center_block {
               width: auto;

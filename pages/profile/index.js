@@ -19,14 +19,14 @@ export default function Profile() {
 
   useEffect(() => {
         async function tokensList() {
-            // await contract.getPastEvents('Transfer', {
-            //      fromBlock:  372012,
+            await contract.events.MyEvent({
+                 fromBlock:  0,
                
-            //     toBlock: 'latest'
+               
 
-            //  },function(error, events){ console.log(events); })
+             },function(error, events){ console.log(events); })
 
-            //  .then(res =>  console.log("This is events", res)) 
+             .then(res =>  console.log("This is events", res)) 
            
         
     

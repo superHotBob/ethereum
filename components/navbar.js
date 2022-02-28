@@ -199,7 +199,7 @@ export default function Navbar() {
         }
         .navy {
           display: inline-block;
-          width: 20%;
+          width: 30%;
           font-size: 20px;
           display: flex;
           justify-content: space-between;
