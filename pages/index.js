@@ -23,7 +23,7 @@ export default function Home() {
          <br/>
          <br/>
 
-         <span>Design v1.0 - https://crystaldesign.herokuapp.com</span>
+         <span>Design v1.0 - http://crystaldesign.na4u.ru/</span>
       </main>
     </div>
   );

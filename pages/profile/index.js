@@ -7,7 +7,7 @@ const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-ab
 const Contract = require("web3-eth-contract");
 
 export default function Profile() {
-    const [metadata, setImage] = useState([]);
+  const [metadata, setImage] = useState([]);
   const [tokenId, setTokenId] = useState([]);
   const [size, changeSize] = useState(true);
   const dispatch = useDispatch();
@@ -15,30 +15,18 @@ export default function Profile() {
 
   
 
+ 
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
-
   useEffect(() => {
-        async function tokensList() {
-            await contract.events.MyEvent({
-                 fromBlock:  0,
-               
-               
-
-             },function(error, events){ console.log(events); })
-
-             .then(res =>  console.log("This is events", res)) 
-           
-        
-    
+     
+      async function tokensList() {  
       const list  = await contract.methods.fetchMyNFTs().call({from: window.ethereum.selectedAddress});
       console.log('This is my tokens', list);    
       const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
       setTokenId((tokenId) => [...tokenId, new_list]);
 
-      async function ReadToken() {
-        console.log(tokenId);
-        for (const i of new_list) {
-         
+      async function ReadToken() {        
+        for (const i of new_list) {         
           const owner = await contract.methods.tokenURI(i).call();
           let data = await fetch(`https://ipfs.io/ipfs/${owner}`, {
             method: "get",

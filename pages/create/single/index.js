@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import closeIcon from "../../../public/image/close.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { hash, setTokenId, tokenId } from "../../../reduser";
+import { hash,  tokenId } from "../../../reduser";
 import Web3 from "web3";
 import Router from 'next/router';
 
@@ -22,8 +22,8 @@ export default function Single() {
   const id = useSelector(tokenId);
   const dispatch = useDispatch();
  
-  const unlock_content = useRef("");
-  const [image_nft, setSelectedNft] = useState();
+  
+  const [imageNft, selectedImageNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
   const [putMarket, setPutMarket] = useState(true);
@@ -35,7 +35,7 @@ export default function Single() {
   const [type_nft, setTypeNtf] = useState();
   const [error_message, setErrorMessage] = useState(0);
 
-  useEffect(()=>setNameNtf(localStorage.getItem('name')),[]);
+  // useEffect(()=>setNameNtf(localStorage.getItem('name')),[]);
 
   const SetMyPrice = (e) => {
     const old = my_price;
@@ -49,27 +49,25 @@ export default function Single() {
       setMyPrice(old);
     }
   };
-  async function previewFile(e) {
-    let ss = await window.showOpenFilePicker(e.target.files[0]);
-    
-    
-  }
+ 
   const SetNameNft = (e) => {
     setNameNtf(e.target.value);
     localStorage.setItem("name", e.target.value);
   };
+  // const removeImage = () => {
+  //   setSelectedNft('');
+  //   // localStorage.setItem("nft", null);
+  // };
   const SetDescription = (e) => {
     setDescription(e.target.value);
     localStorage.setItem("description", e.target.value);
   };
   const web3 = new Web3(Web3.givenProvider);
-  const Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
-  async function CreateItem() {
   
- 
+  async function CreateItem() { 
     const metadata = new Object();
       metadata.name = name_nft;
-      metadata.image = image_nft;
+      metadata.image = imageNft;
       metadata.description = description;
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     //making axios POST request to Pinata ⬇️
@@ -188,36 +186,34 @@ export default function Single() {
 
   
   };
-  const SetRoyalties = (e) => {
-    let data = e.target.value;
-    console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
-    if (data.search(/[a-zA-Z]/gi) === -1 && data.length < 3) {
-      setRoyalties(data);
-    } else {
-      setRoyalties("");
-    }
-  };  
-  useEffect(() => {
-    const nameNft = localStorage.getItem("name");
-    const typeNft = localStorage.getItem("type_nft");
-    const imageNft = localStorage.getItem("nft");
-    const descriptionNft = localStorage.getItem("description");
-    setSelectedNft(imageNft);
-    setTypeNtf(typeNft);
-    setNameNtf(nameNft);
-    setDescription(descriptionNft);    
-  }, []);
-
- 
-
+  // const SetRoyalties = (e) => {
+  //   let data = e.target.value;
+  //   console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
+  //   if (data.search(/[a-zA-Z]/gi) === -1 && data.length < 3) {
+  //     setRoyalties(data);
+  //   } else {
+  //     setRoyalties("");
+  //   }
+  // };  
+  // useEffect(() => {
+  //   const nameNft = localStorage.getItem("name");
+  //   const typeNft = localStorage.getItem("type_nft");
+  //   // const imageNft = localStorage.getItem("nft");
+  //   const descriptionNft = localStorage.getItem("description");
+  //   // setSelectedNft(imageNft);
+  //   setTypeNtf(typeNft);
+  //   setNameNtf(nameNft);
+  //   setDescription(descriptionNft);    
+  // }, []); 
+  console.log('rebut');
   const viewImage = async (event) => {
     let file = await event.target.files[0];    
     setTypeNtf(file.type);
     var reader = new FileReader();
     var url =  reader.readAsDataURL(file);
     reader.onloadend =  function () {
-      setSelectedNft(reader.result);
-      localStorage.setItem("nft", reader.result);
+      selectedImageNft(reader.result);
+      // localStorage.setItem("nft", reader.result);
       localStorage.setItem("type_nft", file.type);
       reader.readAsDataURL(file);
      
@@ -229,24 +225,26 @@ export default function Single() {
       <h1>Create single item on Oasis</h1>
       <div className="main_choose_file">     
         <div className="choose_file">
-          {image_nft ? (
-            <div>
+          {imageNft ? (
+            <div onClick={()=>selectedImageNft()}>
               <h5 className="icon_close">
                 <Image
                   alt="close"
                   src={closeIcon}
                   width="40px"
                   height="40px"
-                  onClick={() => setSelectedNft("")}
+                  
                 />
               </h5>
               {type_nft !== "video/mp4" ? (
                 <div className="main_image">
+                  <Image src={imageNft} width={400} height={500} />
+                  </div>
                   
-                </div>
+               
               ) : (
-                <video width="400" controls>
-                  <source src={selectedFile} type="video/mp4" />
+                <video width="500" controls autoPlay>
+                  {/* <source src={image_nft} type="video/mp4" /> */}
                 </video>
               )}
             </div>
@@ -446,7 +444,7 @@ export default function Single() {
       </div>
       <div className="preview__unlocked">
         <div className="preview_file">
-          {!image_nft && <p>Upload file to preview your brand new NFT</p>}
+          {!imageNft && <p>Upload file to preview your brand new NFT</p>}
         </div>
         {/* <div className="unlocked">
           {unlock_content.current ? unlock_content.current.value : null }
@@ -484,7 +482,7 @@ export default function Single() {
           .main_image {
             width: 100%;
             height: 500px;
-            background-image: url(${image_nft});
+            background-image: url(${imageNft});
             background-repeat: no-repeat;
             background-size: auto 100%;
             background-position: center;
@@ -510,7 +508,7 @@ export default function Single() {
             content: '"File" is required';
             position: absolute;
             top: 101%;
-            display: ${image_nft ? "none" : "block"};
+            display: ${imageNft ? "none" : "block"};
             left: 0;
             color: red;
             font: 500 16px/30px Roboto, sans-serif;
@@ -562,7 +560,7 @@ export default function Single() {
             margin-top: 50px;
           }
           .preview_file {
-            background-image: url(${image_nft});
+            background-image: url(${imageNft});
             background-position: center 20%;
             background-repeat: no-repeat;
             background-size: 100%;
