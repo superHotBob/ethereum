@@ -3,6 +3,7 @@ import Image from "next/image";
 import Web3 from "web3";
 import React, { useState, useEffect } from "react";
 import refresh from "../public/image/refresh_icon.png";
+import Router, { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrement,
@@ -16,6 +17,7 @@ import {
 export default function Navbar() {
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     localStorage.getItem('account') ? 
@@ -66,11 +68,11 @@ export default function Navbar() {
     <div className="navbar_main">
       <div>
         <Link href="/">
-          <a className="to_main_page">O</a>
+          <a className="to_main_page">Home page</a>
         </Link>
-        <label>
+        {/* <label>
           <input type="search" placeholder="Colection, item or user" />
-        </label>
+        </label> */}
       </div>
 
       <nav className="navy">
@@ -80,13 +82,13 @@ export default function Navbar() {
         <Link href="/profile">
           <a className="">My profile</a>
         </Link>
-        <Link href="/">
+        {/* <Link href="/">
           <a className="">Following</a>
-        </Link>
+        </Link> */}
         <Link href="/">
           <a className="">Activity</a>
         </Link>
-        <span>...</span>
+        {/* <span>...</span> */}
       </nav>
       <div>
         {!account ? (
@@ -154,12 +156,14 @@ export default function Navbar() {
             </div> */}
             {/* <button>Add funds with card</button> */}
           </div>
-          <button style={{ backgroundImage: "url(/static/user.png)" }}>
-            My profile
-          </button>
-          <button style={{ backgroundImage: "url(/static/edit.svg)" }}>
+          <Link href="/profile" passHref>
+            <button style={{ backgroundImage: "url(/static/user.png)" }} >
+              My NFTs
+            </button>
+          </Link>
+          {/* <button style={{ backgroundImage: "url(/static/edit.svg)" }}>
             Edit profile
-          </button>
+          </button> */}
           <button
             onClick={SignOut}
             style={{ backgroundImage: "url(/static/power-off.png)" }}
@@ -195,7 +199,7 @@ export default function Navbar() {
         }
         .navy {
           display: inline-block;
-          width: 35%;
+          width: 20%;
           font-size: 20px;
           display: flex;
           justify-content: space-between;
@@ -227,8 +231,8 @@ export default function Navbar() {
           border-radius: 50px;
         }
         .to_main_page {
-          vertical-align: middle;
-          font-size: 45px;
+          line-height: 60px;
+          font-size: 18px;
           font-weight: 700;
           padding: 0 10px;
           border-radius: 15px;

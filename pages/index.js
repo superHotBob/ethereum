@@ -14,7 +14,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to Oasis</h1>
+        <h1 className={styles.title}>Welcome to Crystal</h1>
+        <p className={styles.text}>Now you can connect your wallet via Metamask<br/> (Emerald ParaTime testnet),
+         create, view and transfer NFTs.<br/> The alpha build is compatible with PNG, JPEG, GIF, MP3, MP4 via IPFS.
+         <br/>
+         Alpha v1.0
+         </p>
+         <br/>
+         <br/>
+
+         <span>Design v1.0 - https://crystaldesign.herokuapp.com</span>
       </main>
     </div>
   );

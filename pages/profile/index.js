@@ -18,8 +18,18 @@ export default function Profile() {
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
   useEffect(() => {
+        async function tokensList() {
+            // await contract.getPastEvents('Transfer', {
+            //      fromBlock:  372012,
+               
+            //     toBlock: 'latest'
+
+            //  },function(error, events){ console.log(events); })
+
+            //  .then(res =>  console.log("This is events", res)) 
+           
+        
     
-    async function tokensList() {
       const list  = await contract.methods.fetchMyNFTs().call({from: window.ethereum.selectedAddress});
       console.log('This is my tokens', list);    
       const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
@@ -53,12 +63,12 @@ export default function Profile() {
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>Explore MY NFTs <button className="size" onClick={()=>changeSize(!size)}>size</button></h1>
+      <h1>Explore MY NFTs <button className="size" onClick={()=>changeSize(!size)}>view</button></h1>
       {metadata.length > 0 && (
         <div className="all_nft">
           {metadata.map((i) => (
             <Link href="/token/[pid]" key={i.id}  as={`/token/${i.id}`}>
-              <a>
+              <a style={{marginRight: 9}}>
                 <div
                   style={{ backgroundImage: `url(${i.image})` }}
                   className="image_block"
@@ -94,7 +104,7 @@ export default function Profile() {
         }
         .all_nft {
           display: flex;
-          justify-content: space-between;
+          
           flex-wrap: wrap;
           align-content: flex-start;
         }
@@ -146,18 +156,21 @@ export default function Profile() {
           top: -70px;
         }
         .image_block {
-          width: ${size ? '29' : '21'}vw;
+          width: ${size ? '29' : '21.6'}vw;
           height: ${size ? '30' : '20'}vw;
           padding: 2%;
-          margin-top: 20px;         
-          display: inline-block;
-          border: 1px solid #bbb;
+          margin-top: 9px;         
+          display: inline-block;         
           border-radius: 15px;
           text-align: center;
           position: relative;
           background-size: auto 70%;
           background-repeat: no-repeat;
           background-position: center 40%;
+        }
+        .image_block:hover {
+            box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
+            transition: all 0.5s;
         }
         .size {
           font: 500 20px/50px Roboto, sans-serif;
@@ -166,8 +179,7 @@ export default function Profile() {
         }
         .name_image {
           text-align: center;
-
-          margin: ${size ? '90% 0 0' : '77% 0 0'};
+          margin: ${size ? '90% 0 0' : '75% 0 0'};
           font: 700 18px/18px Roboto, sans-serif;
         }
         .name_image img {

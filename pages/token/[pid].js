@@ -10,15 +10,18 @@ const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 export default function Token() {
 
   
-  const [viewTransfer, setViewTransfer] = useState(); 
+  const [viewTransfer, setViewTransfer] = useState();
+  const [id, setId] = useState(); 
  
 
   useEffect(() => {
+
+    
     async function fetchNft() {
     let link = window.location.href;
     let link_length = link.lastIndexOf("/");
     let tokenId = Number(link.substr(link_length + 1, 1000));
-   
+    setId(tokenId);  
     
     const list  = await contract.methods.fetchMyNFTs().call({from: window.ethereum.selectedAddress});
     console.log('This is my tokens', list);    
@@ -104,14 +107,15 @@ export default function Token() {
           <div className="title__block">
             <h1>{data.name}</h1>
             <h4>{data.description}</h4>
+            <h3>Token Id: {id}</h3>
             {/* <p className="creator">{data.creatorOf}</p> */}
             <p className="menu">
               <span className="Owners" onClick={() => selectMenu("Owners")}>
                 Owners
               </span>
-              <span className="Details" onClick={() => selectMenu("Details")}>
+              {/* <span className="Details" onClick={() => selectMenu("Details")}>
                 Details
-              </span>
+              </span> */}
               <span className="History" onClick={() => selectMenu("History")}>
                 History
               </span>
@@ -229,7 +233,7 @@ export default function Token() {
               background-color: #fff;
               margin: 10px 0;
               color: #fff;
-              background: rgb(0, 102, 255);
+              background: ${account ? 'rgb(0, 102, 255)':'rgb(230, 230, 230)'};
               display: inline-block;
             }
           `}</style>

@@ -50,7 +50,7 @@ export default function ExploreAll() {
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>Explore ALL NFTs <button className="size" onClick={()=>changeSize(!size)}>size</button></h1>
+      <h1>Explore ALL NFTs <button className="size" onClick={()=>changeSize(!size)}>view</button></h1>
       {metadata.length > 0 && (
         <div className="all_nft">
           {metadata.map((i) => (
@@ -148,13 +148,17 @@ export default function ExploreAll() {
           padding: 2%;
           margin-top: 20px;         
           display: inline-block;
-          border: 1px solid #bbb;
+         
           border-radius: 15px;
           text-align: center;
           position: relative;
           background-size: auto 70%;
           background-repeat: no-repeat;
           background-position: center 40%;
+        }
+        .image_block:hover {
+            box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
+            transition: all 0.5s;
         }
         .size {
           font: 500 20px/50px Roboto, sans-serif;
