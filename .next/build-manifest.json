@@ -30,6 +30,11 @@
       "static/chunks/main.js",
       "static/chunks/pages/explore/all.js"
     ],
+    "/profile": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/profile.js"
+    ],
     "/token/[pid]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

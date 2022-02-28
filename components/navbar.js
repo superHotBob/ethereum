@@ -77,7 +77,7 @@ export default function Navbar() {
         <Link href="/explore/all">
           <a className="">Explore</a>
         </Link>
-        <Link href="/">
+        <Link href="/profile">
           <a className="">My profile</a>
         </Link>
         <Link href="/">

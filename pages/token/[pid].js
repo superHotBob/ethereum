@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { tokenId, setTokenId } from "../../reduser";
 import Image from "next/image";
 import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
@@ -8,15 +6,26 @@ const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-ab
 const Contract = require("web3-eth-contract");
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 
+
 export default function Token() {
-  const dispatch = useDispatch();
-  const Id = useSelector(tokenId);
+
+  
+  const [viewTransfer, setViewTransfer] = useState(); 
+ 
 
   useEffect(() => {
+    async function fetchNft() {
     let link = window.location.href;
-    let leng = link.lastIndexOf("/");
-    let tokenId = Number(link.substr(leng + 1, 1000));
-    dispatch(setTokenId(tokenId));
+    let link_length = link.lastIndexOf("/");
+    let tokenId = Number(link.substr(link_length + 1, 1000));
+   
+    
+    const list  = await contract.methods.fetchMyNFTs().call({from: window.ethereum.selectedAddress});
+    console.log('This is my tokens', list);    
+    const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
+    
+    setViewTransfer(new_list.indexOf(tokenId) != -1)
+
     setTimeout(() => {
       tokenId === 0 ? console.log("error", tokenId) : ReadToken();
       async function ReadToken() {
@@ -30,14 +39,14 @@ export default function Token() {
           .then((res) => setData((prevState) => ({ ...prevState, ...res })));
       }
     }, 100);
+    };
+    fetchNft();
   }, []);
 
   const web3 = new Web3(Web3.givenProvider);
-
   const [data, setData] = useState();
   const [owner, setOwner] = useState();
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
-
   const [menu, selectMenu] = useState("Owners");
   const [account, setAccount] = useState();
   const [result, setResult] = useState("");
@@ -108,21 +117,26 @@ export default function Token() {
               </span>
             </p>
             <h3>{owner}</h3>
-            <label className="price">
-              <input
-                type="text"
-                placeholder="enter account data"
-                value={account}
-                onChange={(e) => setAccount(e.target.value)}
-              />
-            </label>
-            <button
-              className={account ? "create_item" : "create_item disabled"}
-              disabled={!account}
-              onClick={mintNFT}
-            >
-              TRANSFER THIS NFT
-            </button>
+           
+            { viewTransfer && 
+              <>
+                <label className="price">
+                  <input
+                    type="text"
+                    placeholder="enter account data"
+                    value={account}
+                    onChange={(e) => setAccount(e.target.value)}
+                  />
+                </label>
+                <button
+                  className={account ? "create_item" : "create_item disabled"}
+                  disabled={!account}
+                  onClick={mintNFT}
+                >
+                  TRANSFER THIS NFT
+                </button>
+              </>
+            }
             <h3>{result}</h3>
             {/* <div className="select_menu">
               {menu === 'Owners' ?

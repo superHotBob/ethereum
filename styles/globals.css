@@ -15,6 +15,7 @@ a {
 }
 button {
   cursor: pointer;
+  border-radius: 50px;
 }
 .rarible {
   border-radius: 50px;
