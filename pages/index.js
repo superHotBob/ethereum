@@ -1,11 +1,7 @@
 import Head from "next/head";
-import { useEffect } from "react";
 import styles from "../styles/Home.module.css";
 
-
-export default function Home() {  
- 
-   
+export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
@@ -15,15 +11,20 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Welcome to Crystal</h1>
-        <p className={styles.text}>Now you can connect your wallet via Metamask<br/> (Emerald ParaTime testnet),
-         create, view and transfer NFTs.<br/> The alpha build is compatible with PNG, JPEG, GIF, MP3, MP4 via IPFS.
-         <br/>
-         Alpha v1.0
-         </p>
-         <br/>
-         <br/>
+        <p className={styles.text}>
+          Now you can connect your wallet via Metamask
+          <br /> (Emerald ParaTime testnet), create, view and transfer NFTs.
+          <br /> The alpha build is compatible with PNG, JPEG, GIF, MP3, MP4 via
+          IPFS.
+          <br />
+          Alpha v1.0
+        </p>
+        <br />
+        <br />
 
-         <span>Design v1.0 - http://crystaldesign.na4u.ru/</span>
+        <span>
+          Design v1.0 - <a>http://crystaldesign.na4u.ru/</a>
+        </span>
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { useDispatch } from "react-redux";
+
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
 const Contract = require("web3-eth-contract");
@@ -10,7 +10,8 @@ export default function ExploreAll() {
   const [metadata, setImage] = useState([]);
   const [tokenId, setTokenId] = useState([]);
   const [size, changeSize] = useState(true);
-  const dispatch = useDispatch();
+  const [sort, setSort] = useState(true);
+  
   const web3 = new Web3(Web3.givenProvider);
 
   
@@ -50,10 +51,17 @@ export default function ExploreAll() {
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>Explore ALL NFTs <button className="size" onClick={()=>changeSize(!size)}>view</button></h1>
+      <h1>Explore ALL NFTs 
+        <button className="size" onClick={()=>changeSize(!size)}>
+          view
+        </button>
+        <button className="size" onClick={()=>setSort(!sort)}>
+          sort
+        </button>
+      </h1>
       {metadata.length > 0 && (
         <div className="all_nft">
-          {metadata.map((i) => (
+          {metadata.sort((a,b) => sort ? a.id-b.id: b.id-a.id).map((i) => (
             <Link href="/token/[pid]" key={i.id}  as={`/token/${i.id}`}>
               <a>
                 <div
@@ -66,13 +74,17 @@ export default function ExploreAll() {
                       <span className="collection creator"></span>
                     </p> */}
                   tokenId:{i.id}
+                  {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
+                  <video width="80%" autoPlay loop mute src={i.image} type="video/mp4" />
+                </div>}
                   <h3 className="name_image">
                     {i.name}
                     {/* <span className="icon_close">
                         <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
                       </span> */}
+                  <p className="description">{i.description}</p>
                   </h3>
-                  <p className="cost">{i.description}</p>
+                  
                 </div>
               </a>
             </Link>
@@ -88,6 +100,10 @@ export default function ExploreAll() {
         .start_main {
           margin: 200px auto;
           width: 90%;
+        }
+        .size {
+          margin-left: 20px;
+          width: 50px;
         }
         .all_nft {
           display: flex;
@@ -166,17 +182,16 @@ export default function ExploreAll() {
           border-radius: 50px;
         }
         .name_image {
-          text-align: center;
-
-          margin: ${size ? '90% 0 0' : '77% 0 0'};
-          font: 700 18px/18px Roboto, sans-serif;
+          text-align: center;          
+          font: 700 20px/22px Roboto, sans-serif;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          margin-bottom: 0;
+         
         }
-        .name_image img {
-          float: right;
-          margin-top: -8px;
-        }
-        .cost {
-          font: 500 14px/20px Roboto, sans-serif;
+        .description {
+          font: 500 16px/20px Roboto, sans-serif;
           text-align: center;
         }
         h1 {

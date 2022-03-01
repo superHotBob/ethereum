@@ -7,8 +7,9 @@ const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-ab
 const Contract = require("web3-eth-contract");
 
 export default function Profile() {
-  const [metadata, setImage] = useState([]);
+  const [metadata, setMetadata] = useState([]);
   const [tokenId, setTokenId] = useState([]);
+  const [sort, setSort] = useState(true);
   const [size, changeSize] = useState(true);
   const dispatch = useDispatch();
   const web3 = new Web3(Web3.givenProvider);
@@ -33,7 +34,7 @@ export default function Profile() {
           })
             .then((res) => res.json())
             .then((res) => res);
-          setImage((metadata) => [
+            setMetadata((metadata) => [
             ...metadata,
             {
               name: data.name,
@@ -41,6 +42,7 @@ export default function Profile() {
               image: data.image,
               id: i,
             },
+            
           ]);
         }
       }
@@ -51,29 +53,43 @@ export default function Profile() {
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>Explore MY NFTs <button className="size" onClick={()=>changeSize(!size)}>view</button></h1>
+      <h1>Explore MY NFTs 
+        <button className="size" onClick={()=>changeSize(!size)}>
+          view
+        </button>
+        <button className="size" onClick={()=>setSort(!sort)}>
+          sort
+        </button>
+      </h1>
       {metadata.length > 0 && (
         <div className="all_nft">
-          {metadata.map((i) => (
-            <Link href="/token/[pid]" key={i.id}  as={`/token/${i.id}`}>
+          {metadata.sort((a,b) => sort ? a.id-b.id: b.id-a.id).map((i) => (
+            <Link href="/token/[pid]" key={i.id} as={`/token/${i.id}`} >
               <a style={{marginRight: 9}}>
+               
                 <div
                   style={{ backgroundImage: `url(${i.image})` }}
                   className="image_block"
-                >
+                >  
+                tokenId:{i.id}
+                {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
+                  <video width="80%" autoPlay loop mute src={i.image} type="video/mp4" />
+                </div>}
+                  
                   {/* <p className="bolls">
                       <span className="collection main">ENS</span>
                       <span className="collection owner"></span>
                       <span className="collection creator"></span>
                     </p> */}
-                  tokenId:{i.id}
+                 
                   <h3 className="name_image">
                     {i.name}
                     {/* <span className="icon_close">
                         <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
                       </span> */}
+                  <p className="description">{i.description}</p>
                   </h3>
-                  <p className="cost">{i.description}</p>
+                  
                 </div>
               </a>
             </Link>
@@ -95,6 +111,9 @@ export default function Profile() {
           
           flex-wrap: wrap;
           align-content: flex-start;
+        }
+        .size {
+          margin-left: 20px;
         }
         .collection {
           display: inline-block;
@@ -146,8 +165,8 @@ export default function Profile() {
         .image_block {
           width: ${size ? '29' : '21.6'}vw;
           height: ${size ? '30' : '20'}vw;
-          padding: 2%;
-          margin-top: 9px;         
+          padding: 2% 0 10px;
+          margin-top: 19px;         
           display: inline-block;         
           border-radius: 15px;
           text-align: center;
@@ -166,18 +185,19 @@ export default function Profile() {
           border-radius: 50px;
         }
         .name_image {
+          text-align: center;          
+          font: 700 20px/22px Roboto, sans-serif;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          margin-bottom: 0;
+         
+        }
+        .description {
+          font: 500 16px/20px Roboto, sans-serif;
           text-align: center;
-          margin: ${size ? '90% 0 0' : '75% 0 0'};
-          font: 700 18px/18px Roboto, sans-serif;
         }
-        .name_image img {
-          float: right;
-          margin-top: -8px;
-        }
-        .cost {
-          font: 500 14px/20px Roboto, sans-serif;
-          text-align: center;
-        }
+        
         h1 {
           text-align: left;
           font-size: 50px;

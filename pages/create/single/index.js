@@ -1,29 +1,21 @@
 import Image from "next/image";
-
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import closeIcon from "../../../public/image/close.svg";
-import { useSelector, useDispatch } from "react-redux";
-import { hash,  tokenId } from "../../../reduser";
+import { useSelector } from "react-redux";
+import { hash } from "../../../reduser";
 import Web3 from "web3";
-import Router from 'next/router';
+import Router from "next/router";
 
 const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
 const Contract = require("web3-eth-contract");
 
-const axios = require('axios');
-
-
+const axios = require("axios");
 
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 
 export default function Single() {
-  
   const str = useSelector(hash);
-  const id = useSelector(tokenId);
-  const dispatch = useDispatch();
  
-  
-  const [imageNft, selectedImageNft] = useState();
   const [price, setPrice] = useState(0);
   const [my_price, setMyPrice] = useState();
   const [putMarket, setPutMarket] = useState(true);
@@ -31,98 +23,102 @@ export default function Single() {
   const [royalties, setRoyalties] = useState();
   const [minting, setMinting] = useState();
   const [description, setDescription] = useState();
-  const [name_nft, setNameNtf] = useState();
-  const [type_nft, setTypeNtf] = useState();
-  const [error_message, setErrorMessage] = useState(0);
+  const [name_nft, setNameNft] = useState();
+  const [type_nft, setTypeNft] = useState();
+  const [error_message, setErrorMessage] = useState("none");
+  const [imageNft, selectedImageNft] = useState('');
+  // useEffect(() => {
+  //   const nameNft = localStorage.getItem("name");
+  //   const typeNft = localStorage.getItem("type_nft");
+  //   const imageNft = localStorage.getItem("nft");
+  //   const descriptionNft = localStorage.getItem("description");
+  //   setTimeout(() => selectedImageNft(imageNft), 1000);
+  //   setTypeNtf(typeNft);
+  //   setNameNtf(nameNft);
+  //   setDescription(descriptionNft);
+  // }, []);
 
-  // useEffect(()=>setNameNtf(localStorage.getItem('name')),[]);
-
-  const SetMyPrice = (e) => {
-    const old = my_price;
-    console.log(Number(e.target.value) === e.target.value);
-    if (Number(e.target.value) !== "NaN") {
-      setMyPrice(e.target.value);
-      console.log(my_price);
-    } else if (Number(e.target.value) === 0) {
-      setMyPrice();
-    } else {
-      setMyPrice(old);
-    }
-  };
- 
-  const SetNameNft = (e) => {
-    setNameNtf(e.target.value);
-    localStorage.setItem("name", e.target.value);
-  };
-  // const removeImage = () => {
-  //   setSelectedNft('');
-  //   // localStorage.setItem("nft", null);
+  // const SetMyPrice = (e) => {
+  //   const old = my_price;
+  //   console.log(Number(e.target.value) === e.target.value);
+  //   if (Number(e.target.value) !== "NaN") {
+  //     setMyPrice(e.target.value);
+  //     console.log(my_price);
+  //   } else if (Number(e.target.value) === 0) {
+  //     setMyPrice();
+  //   } else {
+  //     setMyPrice(old);
+  //   }
   // };
-  const SetDescription = (e) => {
-    setDescription(e.target.value);
-    localStorage.setItem("description", e.target.value);
-  };
+
+  // const SetNameNft = (e) => {
+  //   setNameNtf(e.target.value);
+  //   // localStorage.setItem("name", e.target.value);
+  // };
+  // const removeImage = () => {
+  //   selectedImageNft();
+  //   // localStorage.setItem("nft", "");
+  // };
+  // const SetDescription = (e) => {
+  //   setDescription(e.target.value);
+  //   // localStorage.setItem("description", e.target.value);
+  // };
   const web3 = new Web3(Web3.givenProvider);
-  
-  async function CreateItem() { 
+
+  async function CreateItem() {
     const metadata = new Object();
-      metadata.name = name_nft;
-      metadata.image = imageNft;
-      metadata.description = description;
+    metadata.name = name_nft;
+    metadata.image = imageNft;
+    metadata.description = description;
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     //making axios POST request to Pinata ⬇️
-    return axios 
-        .post(url, metadata, {
-            headers: {
-              pinata_api_key: '8e18148843cb5c17cd92',
-              pinata_secret_api_key: 'a94689cdb6130f38863f0ebb6675eee19bd11556bd5f6bd6b1963e0ae3814ba4'
-            }
-        })
-        .then(async function (response) {
-            let metadata =  response.data.IpfsHash;
-            console.log('Metadata', metadata);
-            const Mycontract = await new Contract(contractABI.abi, contractAddress);
-            // const transactionParameters = {
-            //   to: res.contractAddress, // Required except during contract publications.
-            //   from: window.ethereum.selectedAddress, // must match user's active address.
-            const Mydata = Mycontract.methods
-              .mintNFT(window.ethereum.selectedAddress, metadata).encodeABI();
-            // const my_nonce = await web3.eth.getTransactionCount(window.ethereum.selectedAddress, 'latest');
-            // console.log('This is nonce',my_nonce);  
-            // console.log('This is contract data', Mydata);
-            web3.eth
-              .sendTransaction({
-                from: window.ethereum.selectedAddress,
-                to: contractAddress,        
-                data: Mydata,
-              })
-              .then(res=>{ 
-                let id = web3.utils.hexToNumber(res.logs[1].topics[3]);              
-                console.log(id);
-                // dispatch(setTokenId(id));
-                Router.push(`/token/${id}`);
+    return axios
+      .post(url, metadata, {
+        headers: {
+          pinata_api_key: "8e18148843cb5c17cd92",
+          pinata_secret_api_key:
+            "a94689cdb6130f38863f0ebb6675eee19bd11556bd5f6bd6b1963e0ae3814ba4",
+        },
+      })
+      .then(async function (response) {
+        let metadata = response.data.IpfsHash;
+        console.log("Metadata", metadata);
+        const Mycontract = await new Contract(contractABI.abi, contractAddress);
+        // const transactionParameters = {
+        //   to: res.contractAddress, // Required except during contract publications.
+        //   from: window.ethereum.selectedAddress, // must match user's active address.
+        const Mydata = Mycontract.methods
+          .mintNFT(window.ethereum.selectedAddress, metadata)
+          .encodeABI();
+        // const my_nonce = await web3.eth.getTransactionCount(window.ethereum.selectedAddress, 'latest');
+        // console.log('This is nonce',my_nonce);
+        // console.log('This is contract data', Mydata);
+        web3.eth
+          .sendTransaction({
+            from: window.ethereum.selectedAddress,
+            to: contractAddress,
+            data: Mydata,
+          })
+          .then((res) => {
+            let id = web3.utils.hexToNumber(res.logs[1].topics[3]);
+            console.log(id);
+            // dispatch(setTokenId(id));
+            Router.push(`/token/${id}`);
+          })
+          .then((err) => console.log(err));
 
-             
-              })
-              .then(err=>console.log(err));
+        
+      })
+      .catch(function (error) {
+        console.log(error);
+        return {
+          success: false,
+          message: console.log(error.message),
+        };
+      });
 
-          
-               
-              //  pinataUrl: console.log("https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash)
-           
-        })
-        .catch(function (error) {
-            console.log(error)
-            return {
-                success: false,
-                message: console.log(error.message),
-            }
-
-        });
-   
-    
     // console.log('This is metadataUrl',);
-   
+
     // const Mycontract = await new Contract(contractABI.abi, contractAddress);
     // // const transactionParameters = {
     // //   to: res.contractAddress, // Required except during contract publications.
@@ -130,12 +126,12 @@ export default function Single() {
     // const Mydata = Mycontract.methods
     //   .mintNFT(window.ethereum.selectedAddress, metadata.url).encodeABI();
     // // const my_nonce = await web3.eth.getTransactionCount(window.ethereum.selectedAddress, 'latest');
-    // // console.log('This is nonce',my_nonce);  
+    // // console.log('This is nonce',my_nonce);
     // // console.log('This is contract data', Mydata);
     // web3.eth
     //   .sendTransaction({
     //     from: window.ethereum.selectedAddress,
-    //     to: contractAddress,        
+    //     to: contractAddress,
     //     data: Mydata,
     //   })
     //   .then(res=>{
@@ -165,27 +161,25 @@ export default function Single() {
     //   })
     //   .then(res =>res.json());
 
-      //   try {
-      //        const txHash =  await window.ethereum
-      //           .request({
-      //                method: 'eth_sendTransaction',
-      //              params: [transactionParameters],
-      //           });
-      //        return {
-      //           success: true,
-      //          status: console.log("✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash)
-      //       }
-      //    } catch (error) {
-      //        return {
-      //            success: false,
-      //          status: console.log("😥 Something went wrong: " + error.message)
+    //   try {
+    //        const txHash =  await window.ethereum
+    //           .request({
+    //                method: 'eth_sendTransaction',
+    //              params: [transactionParameters],
+    //           });
+    //        return {
+    //           success: true,
+    //          status: console.log("✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash)
+    //       }
+    //    } catch (error) {
+    //        return {
+    //            success: false,
+    //          status: console.log("😥 Something went wrong: " + error.message)
 
-      //      }
+    //      }
 
-      //  }
-
-  
-  };
+    //  }
+  }
   // const SetRoyalties = (e) => {
   //   let data = e.target.value;
   //   console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
@@ -194,75 +188,67 @@ export default function Single() {
   //   } else {
   //     setRoyalties("");
   //   }
-  // };  
-  // useEffect(() => {
-  //   const nameNft = localStorage.getItem("name");
-  //   const typeNft = localStorage.getItem("type_nft");
-  //   // const imageNft = localStorage.getItem("nft");
-  //   const descriptionNft = localStorage.getItem("description");
-  //   // setSelectedNft(imageNft);
-  //   setTypeNtf(typeNft);
-  //   setNameNtf(nameNft);
-  //   setDescription(descriptionNft);    
-  // }, []); 
-  console.log('rebut');
+  // };
+
   const viewImage = async (event) => {
-    let file = await event.target.files[0];    
-    setTypeNtf(file.type);
+    let file = await event.target.files[0];
+    setTypeNft(file.type);
     var reader = new FileReader();
-    var url =  reader.readAsDataURL(file);
-    reader.onloadend =  function () {
+    var url = reader.readAsDataURL(file);
+    reader.onloadend = function () {
       selectedImageNft(reader.result);
       // localStorage.setItem("nft", reader.result);
-      localStorage.setItem("type_nft", file.type);
+      // localStorage.setItem("type_nft", file.type);
       reader.readAsDataURL(file);
-     
-      
-    };    
+    };
   };
+
   return (
     <div className="single_main">
-      <h1>Create single item on Oasis</h1>
-      <div className="main_choose_file">     
+      <h1 onClick={() => setNum()}>Create single item on Oasis </h1>
+      <div className="main_choose_file">
+      
         <div className="choose_file">
           {imageNft ? (
-            <div onClick={()=>selectedImageNft()}>
+            <div>
               <h5 className="icon_close">
-                <Image
-                  alt="close"
-                  src={closeIcon}
-                  width="40px"
-                  height="40px"
-                  
-                />
+                <button onClick={()=>selectedImageNft(null)}>
+                  <Image
+                    alt="close"
+                    src={closeIcon}
+                    width="40px"
+                    height="40px"
+                  />
+                </button>
               </h5>
               {type_nft !== "video/mp4" ? (
-                <div className="main_image">
-                  <Image src={imageNft} width={400} height={500} />
-                  </div>
-                  
-               
+                <div className="main_image"/>
               ) : (
-                <video width="500" controls autoPlay>
-                  {/* <source src={image_nft} type="video/mp4" /> */}
-                </video>
+                <video
+                  src={imageNft}
+                  width="80%"
+                  loop
+                  autoPlay
+                  mute
+                  type="video/mp4"
+                />
               )}
             </div>
           ) : (
             <>
               <p>PNG, GIF, WEBP, MP4 or MP3. Max 100mb.</p>
-              <form encType="multipart/form-data">
+              
                 <label>
                   Choose File
                   <input
                     type="file"
                     id="file"
                     name="file"
-                    accept="image/png, image/gif, image/webp, image/jpeg,video/mp4"
-                    onChange={viewImage}
+                    accept="image/png, image/gif, image/webp, image/jpeg, video/mp4"
+                    onChange={(e)=>viewImage(e)}
                   />
                 </label>
-              </form>
+              
             </>
           )}
         </div>
@@ -333,7 +319,7 @@ export default function Single() {
           </button>
         </h3>
         <p>Content will be unlocked after successful transaction</p> */}
-        {!unlock && (
+        {/* {!unlock && (
           <>
             <label className="price">
               <input
@@ -345,7 +331,7 @@ export default function Single() {
             </label>
             <p>&#34;Locked content&#34; is not allowed to be empty</p>
           </>
-        )}
+        )} */}
         {/* <h3>Choose collection</h3>
         <div className="select collection">
           <div
@@ -388,7 +374,7 @@ export default function Single() {
             type="text"
             placeholder="e. g. 'Redeemable T-Shirt with logo'"
             value={name_nft}
-            onChange={SetNameNft}
+            onChange={(e)=>setNameNft(e.target.value)}
           />
         </label>
         {!name_nft && (
@@ -411,7 +397,7 @@ export default function Single() {
             type="text"
             placeholder="e. g. 'After purchasing you’ll be able to get the real T-Shirt'"
             value={description}
-            onChange={SetDescription}
+            onChange={(e)=>setDescription(e.target.value)}
           />
         </label>
         <p>With preserved line-breaks</p>
@@ -442,13 +428,20 @@ export default function Single() {
           </span>
         </div>
       </div>
-      <div className="preview__unlocked">
-        <div className="preview_file">
-          {!imageNft && <p>Upload file to preview your brand new NFT</p>}
+      <div className="preview_file">
+        <div style={{ marginTop: 100 }}>
+          {(type_nft === "video/mp4" && imageNft) && (
+            <video
+              width="100%"
+              autoPlay
+              loop
+              mute
+              src={imageNft}
+              type="video/mp4"
+            />
+          )}
         </div>
-        {/* <div className="unlocked">
-          {unlock_content.current ? unlock_content.current.value : null }
-        </div> */}
+        {!imageNft && <p>Upload file to preview your brand new NFT</p>}
       </div>
       <div className="error__message">Sorry,try again!</div>
       <style jsx>
@@ -550,7 +543,7 @@ export default function Single() {
           .service_fee {
             margin: 20px 0;
           }
-          .preview__unlocked {
+          .preview_file {
             display: inline-block;
             float: right;
             position: -webkit-sticky; /* Safari */
@@ -558,12 +551,10 @@ export default function Single() {
             top: 160px;
             width: 35%;
             margin-top: 50px;
-          }
-          .preview_file {
             background-image: url(${imageNft});
-            background-position: center 20%;
+            background-position: center 50%;
             background-repeat: no-repeat;
-            background-size: 100%;
+            background-size: 50%;
             height: 500px;
             border: 1px solid rgba(4, 4, 5, 0.1);
             border-radius: 15px;
@@ -763,7 +754,7 @@ export default function Single() {
             top: 45%;
             left: 35%;
             height: 300px;
-            opacity: ${error_message};
+            display: ${error_message};
             width: 30%;
             background: #fff;
             z-index: 100;

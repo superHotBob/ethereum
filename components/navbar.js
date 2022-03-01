@@ -80,7 +80,7 @@ export default function Navbar() {
           <a className="">Explore</a>
         </Link>
         <Link href="/profile">
-          <a className="">My profile</a>
+          <a className="">My NFTs</a>
         </Link>
         {/* <Link href="/">
           <a className="">Following</a>
@@ -237,7 +237,7 @@ export default function Navbar() {
           padding: 0 10px;
           border-radius: 15px;
           font-family: Roboto, sans-serif;
-          background: rgb(254, 218, 3);
+          
         }
         .create {
           margin-right: 20px;

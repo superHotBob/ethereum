@@ -88,7 +88,7 @@ export default function Token() {
       {data ? (
         <>
           <div className="image__block">
-            {data.type !== "video/mp4" ? (
+            {data.image.search('video') === -1 ? (
               <div className="center_block" />
             ) : (
               <video
@@ -98,10 +98,9 @@ export default function Token() {
                 autoPlay
                 muted
                 className="video"
-              >
-                <source src={data.image} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+                src={data.image} type="video/mp4"
+              />
+                
             )}
           </div>
           <div className="title__block">
