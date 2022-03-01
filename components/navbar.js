@@ -79,9 +79,9 @@ export default function Navbar() {
         <Link href="/explore/all">
           <a className="">Explore</a>
         </Link>
-        <Link href="/profile">
+        {/* <Link href="/profile">
           <a className="">My NFTs</a>
-        </Link>
+        </Link> */}
         {/* <Link href="/">
           <a className="">Following</a>
         </Link> */}

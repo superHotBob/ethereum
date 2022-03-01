@@ -23,7 +23,7 @@ export default function Home() {
         <br />
 
         <span>
-          Design v1.0 - <a>http://crystaldesign.na4u.ru/</a>
+          Design v1.0 - <a className="link" href="http://crystaldesign.na4u.ru/">http://crystaldesign.na4u.ru/</a>
         </span>
       </main>
     </div>

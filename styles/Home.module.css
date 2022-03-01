@@ -15,7 +15,10 @@
   text-align: center;
 }
 
-
+.link:hover {
+  color: blue;
+  
+}
 
 .title {
   margin: 0;
