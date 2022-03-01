@@ -9,12 +9,15 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const web3 = new Web3(Web3.givenProvider);
-    console.log('This is provider', Web3.givenProvider);
-    web3.eth.getAccounts().then((res) => {
-      localStorage.setItem("account", res[0]);
-      dispatch(addAccount(res[0]));
-    });
+   
+   const web3 = new Web3(Web3.givenProvider ||  Web3.providers.HttpProvider('https://testnet.emerald.oasis.dev'));
+   // console.log(new Web3(Web3.givenProvider));
+    if( window.ethereum) {
+      web3.eth.getAccounts().then((res) => {
+        localStorage.setItem("account", res[0]);
+        dispatch(addAccount(res[0]));
+      });
+    }  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

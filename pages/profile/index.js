@@ -71,10 +71,13 @@ export default function Profile() {
                   style={{ backgroundImage: `url(${i.image})` }}
                   className="image_block"
                 >  
-                tokenId:{i.id}
+                tokenId:{i.id}               
                 {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
                   <video width="80%" autoPlay loop mute src={i.image} type="video/mp4" />
-                </div>}
+                  </div>}
+                  {i.image.search('audio') > 0 && <div style={{marginTop: '15%'}}>
+                  <audio controls loop type="audio/mpeg" src={i.image} />
+                  </div>}
                   
                   {/* <p className="bolls">
                       <span className="collection main">ENS</span>

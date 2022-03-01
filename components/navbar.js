@@ -39,7 +39,8 @@ export default function Navbar() {
     setviewWallet(false);
     dispatch(decrement());
     dispatch(addAccount(""));
-    localStorage.setItem('account', '');    
+    localStorage.setItem('account', '');
+    Web3.givenProvider.disconnect();    
   };
   
 
@@ -64,7 +65,7 @@ export default function Navbar() {
   }
 
   const substr = account ? account.slice(7, account.length - 5) : null;
-  const new_str = account.replace(substr, "...");
+  const new_str =  account ? account.replace(substr, "...") : null;
   return (
     <div className="navbar_main">
       <div>
@@ -81,7 +82,7 @@ export default function Navbar() {
           <a className="">Explore</a>
         </Link>
         <Link href="/profile">
-          {account && <a className="">My NFTs</a>}
+          {account  && <a className="">My NFTs</a>}
         </Link>
         {/* <Link href="/">
           <a className="">Following</a>

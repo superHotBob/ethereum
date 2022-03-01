@@ -14,19 +14,14 @@ const axios = require("axios");
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 
 export default function Single() {
-  const str = useSelector(hash);
- 
-  const [price, setPrice] = useState(0);
-  const [my_price, setMyPrice] = useState();
-  const [putMarket, setPutMarket] = useState(true);
-  const [unlock, setUnlock] = useState(true);
-  const [royalties, setRoyalties] = useState();
-  const [minting, setMinting] = useState();
+
+  const str = useSelector(hash); 
   const [description, setDescription] = useState();
   const [name_nft, setNameNft] = useState();
   const [type_nft, setTypeNft] = useState();
   const [error_message, setErrorMessage] = useState("none");
   const [imageNft, selectedImageNft] = useState('');
+
   // useEffect(() => {
   //   const nameNft = localStorage.getItem("name");
   //   const typeNft = localStorage.getItem("type_nft");
@@ -221,22 +216,31 @@ export default function Single() {
                   />
                 </button>
               </h5>
-              {type_nft !== "video/mp4" ? (
-                <div className="main_image"/>
-              ) : (
+              {type_nft === "video/mp4" ? (
                 <video
-                  src={imageNft}
-                  width="80%"
+                src={imageNft}
+                width="80%"
+                loop
+                autoPlay
+                mute
+                type="video/mp4"
+              />
+              ) : type_nft === "audio/mpeg" ? (
+               
+                <audio
+                  controls
                   loop
-                  autoPlay
-                  mute
-                  type="video/mp4"
+                  autoPlay                 
+                  type="audio/mpeg"
+                  src={imageNft}
                 />
-              )}
+                 
+              ) : (<div className="main_image"/>)
+              }
             </div>
           ) : (
             <>
-              <p>PNG, GIF, WEBP, MP4 . Max 100mb.</p>
+              <p>PNG, GIF, WEBP, MP4, MP3 . Max 100mb.</p>
               
                 <label>
                   Choose File
@@ -244,7 +248,7 @@ export default function Single() {
                     type="file"
                     id="file"
                     name="file"
-                    accept="image/png, image/gif, image/webp, image/jpeg, video/mp4"
+                    accept="image/png, image/gif, image/webp, image/jpeg, video/mp4,audio/mp3"
                     onChange={(e)=>viewImage(e)}
                   />
                 </label>
@@ -419,7 +423,7 @@ export default function Single() {
                 : "create_item disabled"
             }
             disabled={!(description && name_nft && str)}
-            onClick={CreateItem}
+            onClick={()=>CreateItem()}
           >
             Create item
           </button>
@@ -430,7 +434,7 @@ export default function Single() {
       </div>
       <div className="preview_file">
         <div style={{ marginTop: 100 }}>
-          {(type_nft === "video/mp4" && imageNft) && (
+          { (type_nft === "video/mp4" && imageNft) ? 
             <video
               width="100%"
               autoPlay
@@ -438,8 +442,16 @@ export default function Single() {
               mute
               src={imageNft}
               type="video/mp4"
-            />
-          )}
+            /> 
+            :  (type_nft === "audio/mpeg" && imageNft) ? 
+            <audio
+              className="audio"
+              controls
+              loop                           
+              type="audio/mpeg"
+              src={imageNft}
+            /> : null
+          }
         </div>
         {!imageNft && <p>Upload file to preview your brand new NFT</p>}
       </div>
@@ -450,7 +462,10 @@ export default function Single() {
             font: 500 14px/14px Roboto, sans-serif;
             color: rgb(110, 110, 110);
           }
-
+          .audio {
+            display: block;
+            margin: 40% auto;
+          }
           .single_main {
             width: 70%;
             margin: 150px auto 0;
@@ -694,17 +709,7 @@ export default function Single() {
             position: absolute;
             top: 40px;
           }
-          .royalties:before {
-            content: ${royalties
-              ? `'Suggested: 0%, 10%, 20%, 30%. Maximum is 50%'`
-              : `'Royalties must be a number'`};
-            left: 0;
-            color: ${royalties ? "rgba(4, 4, 5, 0.5)" : "red"};
-            position: absolute;
-            font-size: 14px;
-            font-weight: 400;
-            top: 80px;
-          }
+         
           .create_item,
           .show_advansed {
             padding: 18px;

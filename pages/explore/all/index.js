@@ -12,14 +12,18 @@ export default function ExploreAll() {
   const [size, changeSize] = useState(true);
   const [sort, setSort] = useState(true);
   
-  const web3 = new Web3(Web3.givenProvider);
+  const web3 = new Web3(Web3.givenProvider ||  Web3.providers.HttpProvider('https://testnet.emerald.oasis.dev'));
 
   
 
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
   useEffect(() => {
-    async function tokensList() {
+      async function tokensList() {
+         
+         
+         
+   
       
       const list = await contract.methods.fetchMarketItems().call();
       const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
@@ -78,7 +82,10 @@ export default function ExploreAll() {
                   tokenId:{i.id}
                   {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
                   <video width="80%" autoPlay loop mute src={i.image} type="video/mp4" />
-                </div>}
+                  </div>}
+                  {i.image.search('audio') > 0 && <div style={{marginTop: '15%'}}>
+                  <audio controls loop type="audio/mpeg" src={i.image} />
+                  </div>}
                   <h3 className="name_image">
                     {i.name}
                     {/* <span className="icon_close">

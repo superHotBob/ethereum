@@ -6,48 +6,42 @@ const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-ab
 const Contract = require("web3-eth-contract");
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 
-
 export default function Token() {
-
-  
   const [viewTransfer, setViewTransfer] = useState();
-  const [id, setId] = useState(); 
- 
+  const [id, setId] = useState();
 
   useEffect(() => {
-
-    
     async function fetchNft() {
-    let link = window.location.href;
-    let link_length = link.lastIndexOf("/");
-    let tokenId = Number(link.substr(link_length + 1, 1000));
-    setId(tokenId);  
-    
-    const list  = await contract.methods.fetchMyNFTs().call({from: window.ethereum.selectedAddress});
-    console.log('This is my tokens', list);    
-    const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
-    
-    setViewTransfer(new_list.indexOf(tokenId) != -1)
+      let link = window.location.href;
+      let link_length = link.lastIndexOf("/");
+      let tokenId = Number(link.substr(link_length + 1, 1000));
+      setId(tokenId);
 
-    setTimeout(() => {
-      tokenId === 0 ? console.log("error", tokenId) : ReadToken();
-      async function ReadToken() {
-        const my_owner = await contract.methods.ownerOf(tokenId).call();
-        setOwner(my_owner);
-        const owner = await contract.methods.tokenURI(tokenId).call();
-        fetch(`https://ipfs.io/ipfs/${owner}`, {
-          method: "get",
-        })
-          .then((res) => res.json())
-          .then((res) => setData((prevState) => ({ ...prevState, ...res })));
-      }
-    }, 100);
-    };
+      const list = await contract.methods
+        .fetchMyNFTs()
+        .call({ from: window.ethereum.selectedAddress });
+      console.log("This is my tokens", list);
+      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
+
+      setViewTransfer(new_list.indexOf(tokenId) != -1);
+
+      setTimeout(() => {
+        tokenId === 0 ? console.log("error", tokenId) : ReadToken();
+        async function ReadToken() {
+          const my_owner = await contract.methods.ownerOf(tokenId).call();
+          setOwner(my_owner);
+          const owner = await contract.methods.tokenURI(tokenId).call();
+          fetch(`https://ipfs.io/ipfs/${owner}`, {
+            method: "get",
+          })
+            .then((res) => res.json())
+            .then((res) => setData((prevState) => ({ ...prevState, ...res })));
+        }
+      }, 100);
+    }
     fetchNft();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  
 
   const web3 = new Web3(Web3.givenProvider);
 
@@ -92,19 +86,21 @@ export default function Token() {
       {data ? (
         <>
           <div className="image__block">
-            {data.image.search('video') === -1 ? (
-              <div className="center_block" />
-            ) : (
+            {data.image.match("video") ? (
               <video
                 width="600"
                 height="700"
                 loop
                 autoPlay
-                muted
+                mute
                 className="video"
-                src={data.image} type="video/mp4"
+                src={data.image}
+                type="video/mp4"
               />
-                
+            ) : data.image.match("audio") ? (
+              <audio className="audio" controls loop type="audio/mpeg" src={data.image} />
+            ) : (
+              <div className="center_block" />
             )}
           </div>
           <div className="title__block">
@@ -113,7 +109,7 @@ export default function Token() {
             <h3>Token Id: {id}</h3>
             {/* <p className="creator">{data.creatorOf}</p> */}
             <p className="menu">
-              <span className="Owner"  onClick={() => selectMenu("Owner")}>
+              <span className="Owner" onClick={() => selectMenu("Owner")}>
                 Owner
               </span>
               {/* <span className="Details" onClick={() => selectMenu("Details")}>
@@ -123,9 +119,9 @@ export default function Token() {
                 History
               </span>
             </p>
-            <h3>{menu === 'Owner' ? owner : ' '}</h3>
-           
-            { viewTransfer && 
+            <h3>{menu === "Owner" ? owner : " "}</h3>
+
+            {viewTransfer && (
               <>
                 <label className="price">
                   <input
@@ -143,7 +139,7 @@ export default function Token() {
                   TRANSFER THIS NFT
                 </button>
               </>
-            }
+            )}
             <h3>{result}</h3>
             {/* <div className="select_menu">
               {menu === 'Owners' ?
@@ -159,8 +155,12 @@ export default function Token() {
           <style jsx>{`
             .video {
               display: block;
-              margin:0 auto;
+              margin: 0 auto;
               border-radius: 15px;
+            }
+            .audio {
+              margin: 20% auto;
+              display: block;
             }
             .creator {
               display: inline-block;
@@ -241,7 +241,9 @@ export default function Token() {
               background-color: #fff;
               margin: 10px 0;
               color: #fff;
-              background: ${account ? 'rgb(0, 102, 255)':'rgb(230, 230, 230)'};
+              background: ${account
+                ? "rgb(0, 102, 255)"
+                : "rgb(230, 230, 230)"};
               display: inline-block;
             }
           `}</style>
