@@ -3,15 +3,23 @@ import styles from "../styles/Home.module.css";
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
 import { addAccount } from "../reduser";
+import { useEffect } from "react";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const web3 = new Web3(Web3.givenProvider);
 
-  web3.eth.getAccounts().then((res) => {
-    localStorage.setItem("account", res[0]);
-    dispatch(addAccount(res[0]));
-  });
+  
+  useEffect(()=>{
+    const web3 = new Web3(Web3.givenProvider);
+
+      web3.eth.getAccounts().then((res) => {
+      localStorage.setItem("account", res[0]);
+      dispatch(addAccount(res[0]));
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+ 
+ 
   return (
     <div className={styles.container}>
       <Head>

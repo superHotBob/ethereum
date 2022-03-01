@@ -20,6 +20,7 @@ export default function ExploreAll() {
 
   useEffect(() => {
     async function tokensList() {
+      
       const list = await contract.methods.fetchMarketItems().call();
       const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
       setTokenId((tokenId) => [...tokenId, new_list]);
@@ -47,6 +48,7 @@ export default function ExploreAll() {
       ReadToken();
     }
     tokensList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (

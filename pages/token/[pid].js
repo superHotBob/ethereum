@@ -44,9 +44,13 @@ export default function Token() {
     }, 100);
     };
     fetchNft();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  
+
   const web3 = new Web3(Web3.givenProvider);
+
   const [data, setData] = useState();
   const [owner, setOwner] = useState();
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);

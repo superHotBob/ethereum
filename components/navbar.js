@@ -39,10 +39,9 @@ export default function Navbar() {
     setviewWallet(false);
     dispatch(decrement());
     dispatch(addAccount(""));
-    localStorage.setItem('account', '');
-   
-    
+    localStorage.setItem('account', '');    
   };
+  
 
   function updateClipboard(newClip) {
     navigator.clipboard.writeText(newClip).then(
