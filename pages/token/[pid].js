@@ -155,7 +155,7 @@ export default function Token() {
           <style jsx>{`
             .video {
               display: block;
-              margin: 80px auto 0;
+              margin:0 auto;
               border-radius: 15px;
             }
             .creator {
@@ -192,7 +192,7 @@ export default function Token() {
               display: inline-block;
               width: 60%;
               height: 60vh;
-              padding: 0 200px;
+              padding: 0;
             }
             .active {
               color: black;

@@ -35,11 +35,13 @@ export default function Navbar() {
 
   const web3 = new Web3(Web3.givenProvider);
 
-  function SignOut() {
+ async  function SignOut() {
     setviewWallet(false);
     dispatch(decrement());
     dispatch(addAccount(""));
-    localStorage.setItem('account', '')
+    localStorage.setItem('account', '');
+   
+    
   };
 
   function updateClipboard(newClip) {
@@ -79,9 +81,9 @@ export default function Navbar() {
         <Link href="/explore/all">
           <a className="">Explore</a>
         </Link>
-        {/* <Link href="/profile">
-          <a className="">My NFTs</a>
-        </Link> */}
+        <Link href="/profile">
+          {account && <a className="">My NFTs</a>}
+        </Link>
         {/* <Link href="/">
           <a className="">Following</a>
         </Link> */}
@@ -164,12 +166,12 @@ export default function Navbar() {
           {/* <button style={{ backgroundImage: "url(/static/edit.svg)" }}>
             Edit profile
           </button> */}
-          <button
+          {/* <button
             onClick={SignOut}
             style={{ backgroundImage: "url(/static/power-off.png)" }}
           >
             Sign out
-          </button>
+          </button> */}
         </div>
       )}
 

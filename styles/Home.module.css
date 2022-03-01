@@ -17,7 +17,8 @@
 
 .link:hover {
   color: blue;
-  
+  text-decoration: underline !important;
+
 }
 
 .title {

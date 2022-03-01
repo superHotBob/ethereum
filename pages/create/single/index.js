@@ -236,7 +236,7 @@ export default function Single() {
             </div>
           ) : (
             <>
-              <p>PNG, GIF, WEBP, MP4 or MP3. Max 100mb.</p>
+              <p>PNG, GIF, WEBP, MP4 . Max 100mb.</p>
               
                 <label>
                   Choose File
