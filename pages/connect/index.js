@@ -7,6 +7,7 @@ import Image from "next/image";
 import metamask from '../../public/image/metamask.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { increment, addAccount,changeBalance} from '../../reduser';
+import useMetaMask from '../../hooks/metamask';
 
 export default function Connect() {
   const router = useRouter();
@@ -15,7 +16,11 @@ export default function Connect() {
   const [errorMessage, viewErrorMessage] = useState(false);
   const [metaMaskError, viewMetaMaskError] = useState('You are connected to an unsupported network');
 
+  const { connect, disconnect, isActive, account, shouldDisable } = useMetaMask();
+
   const web3 = new Web3(Web3.givenProvider);
+
+  
 
   useEffect(() => {
     const read_id = async () => {
@@ -35,7 +40,26 @@ export default function Connect() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
- 
+  useEffect(()=>ReadAccountNext(), [account]);
+
+
+  async function ReadAccountNext() {
+    await web3.eth.getAccounts().then((res)=>{
+      if ( res[0] > 0 ) {
+        web3.eth.getBalance(res[0])
+        .then((responce)=>{     
+          dispatch(changeBalance(responce/1000000000000000000));
+        });         
+        dispatch(increment());    
+        dispatch(addAccount(res[0]));
+        localStorage.setItem("account", res[0]);
+        router.push('/');        
+      } 
+
+
+    });    
+   
+  };
  
   async function ReadAccount() {
     await web3.eth.getAccounts().then((res)=>{
@@ -47,12 +71,13 @@ export default function Connect() {
         dispatch(increment());    
         dispatch(addAccount(res[0]));
         localStorage.setItem("account", res[0]);
-
-        router.push('/');
+        router.push('/');        
       } else { 
         console.log('error account');
-        viewErrorMessage(true);
-        viewMetaMaskError('Metamask not connected');
+        connect();
+        // router.push('/');
+        // viewErrorMessage(true);
+        // viewMetaMaskError('Metamask not connected');
 
       };    
 
@@ -67,11 +92,11 @@ export default function Connect() {
       <Link href="/">
         <a className="to_main_page">Home page</a>
       </Link>
-      <h1>Sign in your wallet</h1>
+     
       {metaMask ? (
         <button className="without_metamask">Create Metamask Wallet</button>
       ) : (
-        <button className="metamask" onClick={ReadAccount}>Sign in with Metamask</button>
+        <button className="metamask"  onClick={()=>ReadAccount()}>Sign in with Metamask</button>
       )}
       {/* <button>Sign in with Oasis Wallet</button>
       <button>Create new Wallet</button> */}
@@ -107,6 +132,7 @@ export default function Connect() {
           z-index: 100;
           position: absolute;
           padding-left: 35%;
+          padding-top: 20%;
         }
         .to_main_page {
           position: absolute;

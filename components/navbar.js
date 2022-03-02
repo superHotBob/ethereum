@@ -13,10 +13,13 @@ import {
   hash,
   balance,
 } from "../reduser";
+import useMetaMask from '../hooks/metamask';
 
 export default function Navbar() {
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { connect, disconnect, isActive,  shouldDisable } = useMetaMask();
 
   useEffect(() => {
     localStorage.getItem("account")
@@ -34,10 +37,12 @@ export default function Navbar() {
   const web3 = new Web3(Web3.givenProvider);
 
   async function SignOut() {
+    disconnect();
     setviewWallet(false);
     dispatch(decrement());
     dispatch(addAccount(""));
     localStorage.setItem("account", "");
+   
   }
 
   function updateClipboard(newClip) {

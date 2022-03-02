@@ -120,7 +120,7 @@ export default function Profile() {
             ))}
         </div>
       ) : (
-        <h1 style={{ margin: "40vh auto", width: 150, border: "none" }}>
+        <h1 style={{ margin: "30vh auto", width: 150, border: "none" }}>
           <Image src={myAwait} width={100} height={100} alt="await" />
         </h1>
       )}
