@@ -6,12 +6,12 @@ import { hash } from "../../../reduser";
 import Web3 from "web3";
 import Router from "next/router";
 
-const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
+const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const Contract = require("web3-eth-contract");
 
 const axios = require("axios");
 
-const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
+const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
 export default function Single() {
 

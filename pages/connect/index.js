@@ -7,47 +7,65 @@ import Image from "next/image";
 import metamask from '../../public/image/metamask.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { increment, addAccount,changeBalance} from '../../reduser';
+
 export default function Connect() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [metaMask, setMetaMask] = useState(false);
+  const [metaMask, setMetaMask] = useState(false);  
   const [errorMessage, viewErrorMessage] = useState(false);
+  const [metaMaskError, viewMetaMaskError] = useState('You are connected to an unsupported network');
+
+  const web3 = new Web3(Web3.givenProvider);
 
   useEffect(() => {
     const read_id = async () => {
       // const provider = await detectEthereumProvider();
       const chainId = await web3.eth.getChainId();
-      
+
       if (chainId === 42261 ) {
-        console.log("This is provider", chainId);
-        console.log("MetaMask installed!");
+        console.log("This is chainId", chainId);
+       
 
       } else {
-        console.log(chainId);
+        console.log('ChainId is not true',chainId);
         viewErrorMessage(true);
       }
     };
     read_id();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const web3 = new Web3(Web3.givenProvider);  
+
+ 
  
   async function ReadAccount() {
-    const my_account = await web3.eth.getAccounts();    ;
-    web3.eth.getBalance(my_account[0])
-    .then((res)=>{     
-      dispatch(changeBalance(res/1000000000000000000));
+    await web3.eth.getAccounts().then((res)=>{
+      if ( res[0] > 0 ) {
+        web3.eth.getBalance(res[0])
+        .then((responce)=>{     
+          dispatch(changeBalance(responce/1000000000000000000));
+        });         
+        dispatch(increment());    
+        dispatch(addAccount(res[0]));
+        localStorage.setItem("account", res[0]);
+
+        router.push('/');
+      } else { 
+        console.log('error account');
+        viewErrorMessage(true);
+        viewMetaMaskError('Metamask not connected');
+
+      };    
+
+
     });    
-    dispatch(increment());    
-    dispatch(addAccount(my_account[0]));
-    localStorage.setItem("account", my_account[0]);
-    router.push('/');   
+   
   };
   
   return (
     <div className="connect_main">
      
       <Link href="/">
-        <a className="to_main_page">O</a>
+        <a className="to_main_page">Home page</a>
       </Link>
       <h1>Sign in your wallet</h1>
       {metaMask ? (
@@ -74,7 +92,8 @@ export default function Connect() {
             />
           </b>
       </Link>
-      <p>You are connected to an unsupported network
+      <p>
+        {metaMaskError}
 
       </p>
            
@@ -91,14 +110,14 @@ export default function Connect() {
         }
         .to_main_page {
           position: absolute;
-          font-size: 45px;
+          font-size: 20px;
           top: 30px;
           left: 40px;
           font-weight: 700;
           padding: 0 20px;
           font-family: Roboto, sans-serif;
-          border-radius: 20px;
-          background: rgb(254, 218, 3);
+         
+         
         }
         .message_error  {
           position: absolute;

@@ -1,90 +1,125 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
+import Image from "next/image";
+import myAwait from "../../../public/image/await.gif";
 
-const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
-const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
+const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 // const Contract = require("web3-eth-contract");
+const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
 
 export default function ExploreAll() {
-  const [metadata, setImage] = useState([]);  
+  const [metadata, setImage] = useState([]);
   const [size, changeSize] = useState(true);
-  const [sort, setSort] = useState(true);  
-  const web3 = new Web3(Web3.givenProvider ||  Web3.providers.HttpProvider('https://testnet.emerald.oasis.dev'));
-  
+  const [sort, setSort] = useState(true);
+  const web3 = new Web3(
+    Web3.givenProvider ||
+      Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
+  );
+
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
-  useEffect(() => { 
-      async function tokensList() {      
-      const list = await contract.methods.fetchMarketItems().call();
-      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
-      const my_metadata = [];     
-        async function ReadToken() {       
-          for (const i of new_list) {
-            const owner = await contract.methods.tokenURI(i).call();
-            await fetch(`https://ipfs.io/ipfs/${owner}`, {
-              method: "get",
-            })
-              .then((res) => res.json())
-              .then((res) => my_metadata.push({
+
+  useEffect(() => {
+    async function tokensList() {
+      const totalSupply = await contract.methods.totalSupply().call()
+      console.log(totalSupply);
+      const data = [];
+      for (let i = 0; i < totalSupply; i++) {       
+          const tokenId = await contract.methods.tokenByIndex(i).call()
+          const tokenOwner = await contract.methods.ownerOf(tokenId).call()
+          const tokenMetadataURI = await contract.methods.tokenURI(tokenId).call()
+          console.log(tokenId, tokenOwner, tokenMetadataURI)
+        data.push({ tokenId: tokenId, tokenMetadataURI: tokenMetadataURI,tokenOwner: tokenOwner });
+      }
+      console.log(data);
+
+      const my_metadata = [];
+      async function ReadToken() {
+        for (const i of data) {
+          // const owner = await contract.methods.tokenURI(i).call();
+          await fetch(`https://ipfs.io/ipfs/${i.tokenMetadataURI}`, {
+            method: "get",
+          })
+            .then((res) => res.json())
+            .then((res) =>
+              my_metadata.push({
                 name: res.name,
                 description: res.description,
                 image: res.image,
-                id: i,
-              }));
-          }
-          console.log(my_metadata);
-          setImage( my_metadata);
+                id: i.tokenId,
+              })
+            );
         }
+        console.log(my_metadata);
+        setImage(my_metadata);
+      }
       ReadToken();
     }
     tokensList();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
- 
+
   return (
     <div className="start_main">
-      <h1>Explore ALL NFTs 
-        <button className="size" onClick={()=>changeSize(!size)}>
+      <h1>
+        Explore ALL NFTs
+        <button className="size" onClick={() => changeSize(!size)}>
           view
         </button>
-        <button className="size" onClick={()=>setSort(!sort)}>
+        <button className="size" onClick={() => setSort(!sort)}>
           sort
         </button>
       </h1>
-      {metadata.length > 0 && (
+      {metadata.length > 0 ? (
         <div className="all_nft">
-          {metadata.sort((a,b) => sort ? a.id-b.id: b.id-a.id).map((i) => (
-            <Link href="/token/[pid]" key={i.id}  as={`/token/${i.id}`}>
-              <a>
-                <div
-                  style={{ backgroundImage: `url(${i.image})` }}
-                  className="image_block"
-                >
-                  {/* <p className="bolls">
+          {metadata
+            .sort((a, b) => (sort ? a.id - b.id : b.id - a.id))
+            .map((i) => (
+              <Link href="/token/[pid]" key={i.id} as={`/token/${i.id}`}>
+                <a>
+                  <div
+                    style={{ backgroundImage: `url(${i.image})` }}
+                    className="image_block"
+                  >
+                    {/* <p className="bolls">
                       <span className="collection main">ENS</span>
                       <span className="collection owner"></span>
                       <span className="collection creator"></span>
                     </p> */}
-                  tokenId:{i.id}
-                  {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
-                  <video src={i.image} width="80%" loop autoPlay  type="video/mp4" />
-                  </div>}
-                  {i.image.search('audio') > 0 && <div style={{marginTop: '15%'}}>
-                  <audio controls loop type="audio/mpeg" src={i.image} />
-                  </div>}
-                  <h3 className="name_image">
-                    {i.name}
-                    {/* <span className="icon_close">
+                    tokenId:{i.id}
+                    {i.image.search("video") > 0 && (
+                      <div style={{ marginTop: "15%" }}>
+                        <video
+                          src={i.image}
+                          width="80%"
+                          loop
+                          autoPlay
+                          type="video/mp4"
+                        />
+                      </div>
+                    )}
+                    {i.image.search("audio") > 0 && (
+                      <div style={{ marginTop: "15%" }}>
+                        <audio controls loop type="audio/mpeg" src={i.image} />
+                      </div>
+                    )}
+                    <h3 className="name_image">
+                      {i.name}
+                      {/* <span className="icon_close">
                         <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
                       </span> */}
-                  <p className="description">{i.description}</p>
-                  </h3>
-                  
-                </div>
-              </a>
-            </Link>
-          ))}
-        </div>
+                      <p className="description">{i.description}</p>
+                    </h3>
+                  </div>
+                </a>
+              </Link>
+            ))}
+        </div>) : (
+        <h1 style={{ margin: "30vh auto", width: 150, border: "none" }}>
+          <Image src={myAwait} width={100} height={100} alt="await" />
+        </h1>
+      
       )}
       <style jsx>{`
         p,
@@ -93,7 +128,7 @@ export default function ExploreAll() {
           margin: 5px 0;
         }
         .start_main {
-          margin: 200px auto;
+          margin: 160px auto;
           width: 90%;
         }
         .size {
@@ -154,12 +189,12 @@ export default function ExploreAll() {
           top: -70px;
         }
         .image_block {
-          width: ${size ? '29' : '21'}vw;
-          height: ${size ? '30' : '20'}vw;
+          width: ${size ? "29" : "21"}vw;
+          height: ${size ? "30" : "20"}vw;
           padding: 2%;
-          margin-top: 20px;         
+          margin-top: 20px;
           display: inline-block;
-         
+
           border-radius: 15px;
           text-align: center;
           position: relative;
@@ -168,8 +203,8 @@ export default function ExploreAll() {
           background-position: center 40%;
         }
         .image_block:hover {
-            box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
-            transition: all 0.5s;
+          box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
+          transition: all 0.5s;
         }
         .size {
           font: 500 20px/50px Roboto, sans-serif;
@@ -177,13 +212,12 @@ export default function ExploreAll() {
           border-radius: 50px;
         }
         .name_image {
-          text-align: center;          
+          text-align: center;
           font: 700 20px/22px Roboto, sans-serif;
           position: absolute;
           bottom: 0;
           width: 100%;
           margin-bottom: 0;
-         
         }
         .description {
           font: 500 16px/20px Roboto, sans-serif;

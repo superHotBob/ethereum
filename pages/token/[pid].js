@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
-const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
+
+const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const Contract = require("web3-eth-contract");
-const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
+const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
 export default function Token() {
   const [viewTransfer, setViewTransfer] = useState();
@@ -15,15 +16,7 @@ export default function Token() {
       let link = window.location.href;
       let link_length = link.lastIndexOf("/");
       let tokenId = Number(link.substr(link_length + 1, 1000));
-      setId(tokenId);
-
-      const list = await contract.methods
-        .fetchMyNFTs()
-        .call({ from: window.ethereum.selectedAddress });
-      console.log("This is my tokens", list);
-      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
-
-      setViewTransfer(new_list.indexOf(tokenId) != -1);
+      setId(tokenId);     
 
       setTimeout(() => {
         tokenId === 0 ? console.log("error", tokenId) : ReadToken();

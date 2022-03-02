@@ -3,38 +3,45 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import Image from "next/image";
 import myAwait from "../../public/image/await.gif";
-const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
-const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
+const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
+
+const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
+
+
 
 export default function Profile() {
+
   const [metadata, setMetadata] = useState([]);
   const [sort, setSort] = useState(true);
   const [size, changeSize] = useState(true);
-  const web3 = new Web3(Web3.givenProvider);
+
+  const web3 = new Web3(
+    Web3.givenProvider ||
+      Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
+  );
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+
   useEffect(() => {
-    // const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
-    // const myContract = new web3.eth.Contract(contract.abi, contractAddress);
-    
     async function tokensList() {
+      const nftBalance = await contract.methods.balanceOf(walletAddress).call();
+      console.log(nftBalance);
+      const data = [];
+      for (let i = 0; i < nftBalance; i++) {
+        const tokenId = await contract.methods
+          .tokenOfOwnerByIndex(walletAddress, i)
+          .call();
+        const tokenMetadataURI = await contract.methods
+          .tokenURI(tokenId)
+          .call();
+        data.push({ tokenId: tokenId, tokenMetadataURI: tokenMetadataURI });
+      }
+      console.log(data);
 
-    //   const walletAddress = "0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f";
-    // const nftBalance = await contract.methods.balanceOf(walletAddress).call();
-    // for (let i = 1; i < nftBalance; i++) {
-    //   const tokenId = await contract.methods.tokenOfOwnerByIndex(walletAddress, 1).call();
-    //   const tokenMetadataURI = await contract.methods.tokenURI(i).call();
-    //   console.log('This is tokenId', tokenMetadataURI);
-    // }
-      const list = await contract.methods
-        .fetchMyNFTs()
-        .call({ from: window.ethereum.selectedAddress });
-
-      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
       const my_metadata = [];
       async function ReadToken() {
-        for (const i of new_list) {
-          const owner = await contract.methods.tokenURI(i).call();
-          await fetch(`https://ipfs.io/ipfs/${owner}`, {
+        for (const i of data) {          
+          await fetch(`https://ipfs.io/ipfs/${i.tokenMetadataURI}`, {
             method: "get",
           })
             .then((res) => res.json())
@@ -43,10 +50,10 @@ export default function Profile() {
                 name: res.name,
                 description: res.description,
                 image: res.image,
-                id: i,
+                id: i.tokenId,
               })
             );
-        }        
+        }       
         setMetadata(my_metadata);
       }
       ReadToken();
@@ -54,7 +61,7 @@ export default function Profile() {
     tokensList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // setTimeout(()=>console.log('This is tokens', tokenId),2000);
+  
   return (
     <div className="start_main">
       <h1 className="head_nft">
@@ -113,7 +120,7 @@ export default function Profile() {
             ))}
         </div>
       ) : (
-        <h1 style={{ margin: "40vh auto", width: 150, border: 'none' }}>
+        <h1 style={{ margin: "40vh auto", width: 150, border: "none" }}>
           <Image src={myAwait} width={100} height={100} alt="await" />
         </h1>
       )}
@@ -124,7 +131,7 @@ export default function Profile() {
           margin: 5px 0;
         }
         .start_main {
-          margin: 200px auto;
+          margin: 160px auto;
           width: 90%;
         }
         .all_nft {
