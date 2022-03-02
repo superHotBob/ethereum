@@ -4,57 +4,44 @@ import Web3 from "web3";
 
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
-const Contract = require("web3-eth-contract");
+// const Contract = require("web3-eth-contract");
 
 export default function ExploreAll() {
-  const [metadata, setImage] = useState([]);
-  const [tokenId, setTokenId] = useState([]);
+  const [metadata, setImage] = useState([]);  
   const [size, changeSize] = useState(true);
   const [sort, setSort] = useState(true);
   
   const web3 = new Web3(Web3.givenProvider ||  Web3.providers.HttpProvider('https://testnet.emerald.oasis.dev'));
-
-  
-
+  console.log(web3);
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
-
-  useEffect(() => {
-      async function tokensList() {
-         
-         
-         
-   
-      
+  useEffect(() => { 
+      async function tokensList() {      
       const list = await contract.methods.fetchMarketItems().call();
       const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
-      setTokenId((tokenId) => [...tokenId, new_list]);
-
-      async function ReadToken() {
-        console.log(tokenId);
-        for (const i of new_list) {
-          const owner = await contract.methods.tokenURI(i).call();
-          let data = await fetch(`https://ipfs.io/ipfs/${owner}`, {
-            method: "get",
-          })
-            .then((res) => res.json())
-            .then((res) => res);
-          setImage((metadata) => [
-            ...metadata,
-            {
-              name: data.name,
-              description: data.description,
-              image: data.image,
-              id: i,
-            },
-          ]);
+      const my_metadata = [];     
+        async function ReadToken() {       
+          for (const i of new_list) {
+            const owner = await contract.methods.tokenURI(i).call();
+            await fetch(`https://ipfs.io/ipfs/${owner}`, {
+              method: "get",
+            })
+              .then((res) => res.json())
+              .then((res) => my_metadata.push({
+                name: res.name,
+                description: res.description,
+                image: res.image,
+                id: i,
+              }));
+          }
+          console.log(my_metadata);
+          setImage( my_metadata);
         }
-      }
       ReadToken();
     }
     tokensList();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // setTimeout(()=>console.log('This is tokens', tokenId),2000);
+ 
   return (
     <div className="start_main">
       <h1>Explore ALL NFTs 
@@ -81,7 +68,7 @@ export default function ExploreAll() {
                     </p> */}
                   tokenId:{i.id}
                   {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
-                  <video width="80%" autoPlay loop mute src={i.image} type="video/mp4" />
+                  <video src={i.image} width="80%" loop autoPlay  type="video/mp4" />
                   </div>}
                   {i.image.search('audio') > 0 && <div style={{marginTop: '15%'}}>
                   <audio controls loop type="audio/mpeg" src={i.image} />

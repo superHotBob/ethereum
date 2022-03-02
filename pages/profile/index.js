@@ -1,103 +1,110 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { useDispatch } from "react-redux";
+import Image from "next/image";
+import myAwait from "../../public/image/await.gif";
 const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi (3).json");
-const Contract = require("web3-eth-contract");
 
 export default function Profile() {
   const [metadata, setMetadata] = useState([]);
-  const [tokenId, setTokenId] = useState([]);
   const [sort, setSort] = useState(true);
   const [size, changeSize] = useState(true);
-  const dispatch = useDispatch();
   const web3 = new Web3(Web3.givenProvider);
-
-  
-
- 
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
   useEffect(() => {
-     
-      async function tokensList() {  
-      const list  = await contract.methods.fetchMyNFTs().call({from: window.ethereum.selectedAddress});
-      console.log('This is my tokens', list);    
-      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
-      setTokenId((tokenId) => [...tokenId, new_list]);
+    async function tokensList() {
+      const list = await contract.methods
+        .fetchMyNFTs()
+        .call({ from: window.ethereum.selectedAddress });
 
-      async function ReadToken() {        
-        for (const i of new_list) {         
+      const new_list = list.map((i) => Number(i.tokenId)).filter((i) => i > 1);
+      const my_metadata = [];
+      async function ReadToken() {
+        for (const i of new_list) {
           const owner = await contract.methods.tokenURI(i).call();
-          let data = await fetch(`https://ipfs.io/ipfs/${owner}`, {
+          await fetch(`https://ipfs.io/ipfs/${owner}`, {
             method: "get",
           })
             .then((res) => res.json())
-            .then((res) => res);
-            setMetadata((metadata) => [
-            ...metadata,
-            {
-              name: data.name,
-              description: data.description,
-              image: data.image,
-              id: i,
-            },
-            
-          ]);
-        }
+            .then((res) =>
+              my_metadata.push({
+                name: res.name,
+                description: res.description,
+                image: res.image,
+                id: i,
+              })
+            );
+        }        
+        setMetadata(my_metadata);
       }
       ReadToken();
     }
     tokensList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>Explore MY NFTs 
-        <button className="size" onClick={()=>changeSize(!size)}>
+      <h1>
+        Explore MY NFTs
+        <button className="size" onClick={() => changeSize(!size)}>
           view
         </button>
-        <button className="size" onClick={()=>setSort(!sort)}>
+        <button className="size" onClick={() => setSort(!sort)}>
           sort
         </button>
       </h1>
-      {metadata.length > 0 && (
+      {metadata.length > 0 ? (
         <div className="all_nft">
-          {metadata.sort((a,b) => sort ? a.id-b.id: b.id-a.id).map((i) => (
-            <Link href="/token/[pid]" key={i.id} as={`/token/${i.id}`} >
-              <a style={{marginRight: 9}}>
-               
-                <div
-                  style={{ backgroundImage: `url(${i.image})` }}
-                  className="image_block"
-                >  
-                tokenId:{i.id}               
-                {i.image.search('video') > 0 && <div style={{marginTop: '15%'}}>
-                  <video width="80%" autoPlay loop mute src={i.image} type="video/mp4" />
-                  </div>}
-                  {i.image.search('audio') > 0 && <div style={{marginTop: '15%'}}>
-                  <audio controls loop type="audio/mpeg" src={i.image} />
-                  </div>}
-                  
-                  {/* <p className="bolls">
+          {metadata
+            .sort((a, b) => (sort ? a.id - b.id : b.id - a.id))
+            .map((i) => (
+              <Link href="/token/[pid]" key={i.id} as={`/token/${i.id}`}>
+                <a style={{ marginRight: 9 }}>
+                  <div
+                    style={{ backgroundImage: `url(${i.image})` }}
+                    className="image_block"
+                  >
+                    tokenId:{i.id}
+                    {i.image.search("video") > 0 && (
+                      <div style={{ marginTop: "15%" }}>
+                        <video
+                          width="80%"
+                          autoPlay
+                          loop
+                          mute
+                          src={i.image}
+                          type="video/mp4"
+                        />
+                      </div>
+                    )}
+                    {i.image.search("audio") > 0 && (
+                      <div style={{ marginTop: "15%" }}>
+                        <audio controls loop type="audio/mpeg" src={i.image} />
+                      </div>
+                    )}
+                    {/* <p className="bolls">
                       <span className="collection main">ENS</span>
                       <span className="collection owner"></span>
                       <span className="collection creator"></span>
                     </p> */}
-                 
-                  <h3 className="name_image">
-                    {i.name}
-                    {/* <span className="icon_close">
+                    <h3 className="name_image">
+                      {i.name}
+                      {/* <span className="icon_close">
                         <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
                       </span> */}
-                  <p className="description">{i.description}</p>
-                  </h3>
-                  
-                </div>
-              </a>
-            </Link>
-          ))}
+                      <p className="description">{i.description}</p>
+                    </h3>
+                  </div>
+                </a>
+              </Link>
+            ))}
         </div>
+      ) : (
+        <h1 style={{ margin: "40vh auto", width: 150 }}>
+          <Image src={myAwait} width={100} height={100} alt="await" />
+        </h1>
       )}
       <style jsx>{`
         p,
@@ -111,7 +118,7 @@ export default function Profile() {
         }
         .all_nft {
           display: flex;
-          
+
           flex-wrap: wrap;
           align-content: flex-start;
         }
@@ -166,11 +173,11 @@ export default function Profile() {
           top: -70px;
         }
         .image_block {
-          width: ${size ? '29' : '21.6'}vw;
-          height: ${size ? '30' : '20'}vw;
+          width: ${size ? "29" : "21.6"}vw;
+          height: ${size ? "30" : "20"}vw;
           padding: 2% 0 10px;
-          margin-top: 19px;         
-          display: inline-block;         
+          margin-top: 19px;
+          display: inline-block;
           border-radius: 15px;
           text-align: center;
           position: relative;
@@ -179,8 +186,8 @@ export default function Profile() {
           background-position: center 40%;
         }
         .image_block:hover {
-            box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
-            transition: all 0.5s;
+          box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
+          transition: all 0.5s;
         }
         .size {
           font: 500 20px/50px Roboto, sans-serif;
@@ -188,19 +195,18 @@ export default function Profile() {
           border-radius: 50px;
         }
         .name_image {
-          text-align: center;          
+          text-align: center;
           font: 700 20px/22px Roboto, sans-serif;
           position: absolute;
           bottom: 0;
           width: 100%;
           margin-bottom: 0;
-         
         }
         .description {
           font: 500 16px/20px Roboto, sans-serif;
           text-align: center;
         }
-        
+
         h1 {
           text-align: left;
           font-size: 50px;

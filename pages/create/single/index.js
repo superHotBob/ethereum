@@ -20,7 +20,7 @@ export default function Single() {
   const [name_nft, setNameNft] = useState();
   const [type_nft, setTypeNft] = useState();
   const [error_message, setErrorMessage] = useState("none");
-  const [imageNft, selectedImageNft] = useState('');
+  const [imageNft, selectedImageNft] = useState();
 
   // useEffect(() => {
   //   const nameNft = localStorage.getItem("name");
@@ -58,7 +58,7 @@ export default function Single() {
   //   setDescription(e.target.value);
   //   // localStorage.setItem("description", e.target.value);
   // };
-  const web3 = new Web3(Web3.givenProvider);
+  // const web3 = new Web3(Web3.givenProvider);
 
   async function CreateItem() {
     const metadata = new Object();
@@ -111,8 +111,8 @@ export default function Single() {
           message: console.log(error.message),
         };
       });
-
-    // console.log('This is metadataUrl',);
+  };  
+    
 
     // const Mycontract = await new Contract(contractABI.abi, contractAddress);
     // // const transactionParameters = {
@@ -174,7 +174,7 @@ export default function Single() {
     //      }
 
     //  }
-  }
+ 
   // const SetRoyalties = (e) => {
   //   let data = e.target.value;
   //   console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
@@ -186,28 +186,31 @@ export default function Single() {
   // };
 
   const viewImage = async (event) => {
-    let file = await event.target.files[0];
+    let file =  event.target.files[0];
     setTypeNft(file.type);
-    var reader = new FileReader();
-    var url = reader.readAsDataURL(file);
+    console.log(file);
+    const reader = new FileReader();
+    // const url =  reader.readAsDataURL(file);
+    // console.log(url);
     reader.onloadend = function () {
       selectedImageNft(reader.result);
       // localStorage.setItem("nft", reader.result);
       // localStorage.setItem("type_nft", file.type);
-      reader.readAsDataURL(file);
+      
     };
+    reader.readAsDataURL(file);
   };
 
   return (
     <div className="single_main">
-      <h1 onClick={() => setNum()}>Create single item on Oasis </h1>
+      <h1>Create single item on Oasis </h1>
       <div className="main_choose_file">
       
         <div className="choose_file">
           {imageNft ? (
             <div>
               <h5 className="icon_close">
-                <button onClick={()=>selectedImageNft(null)}>
+                <button onClick={()=>selectedImageNft()}>
                   <Image
                     alt="close"
                     src={closeIcon}
@@ -218,13 +221,13 @@ export default function Single() {
               </h5>
               {type_nft === "video/mp4" ? (
                 <video
-                src={imageNft}
-                width="80%"
-                loop
-                autoPlay
-                mute
-                type="video/mp4"
-              />
+                  src={imageNft}
+                  width="80%"
+                  loop
+                  autoPlay
+                  mute
+                  type="video/mp4"
+                />
               ) : type_nft === "audio/mpeg" ? (
                
                 <audio
@@ -235,13 +238,17 @@ export default function Single() {
                   src={imageNft}
                 />
                  
-              ) : (<div className="main_image"/>)
-              }
+              ) : (
+              <div className="main_image"/>
+                
+             
+             
+              )} 
             </div>
           ) : (
             <>
               <p>PNG, GIF, WEBP, MP4, MP3 . Max 100mb.</p>
-              
+              <form>
                 <label>
                   Choose File
                   <input
@@ -252,7 +259,7 @@ export default function Single() {
                     onChange={(e)=>viewImage(e)}
                   />
                 </label>
-              
+                </form>
             </>
           )}
         </div>
@@ -423,7 +430,7 @@ export default function Single() {
                 : "create_item disabled"
             }
             disabled={!(description && name_nft && str)}
-            onClick={()=>CreateItem()}
+            onClick={CreateItem}
           >
             Create item
           </button>

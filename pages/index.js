@@ -7,17 +7,23 @@ import { useEffect } from "react";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const web3 = new Web3(
+    Web3.givenProvider ||
+      Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
+  );
 
   useEffect(() => {
-   
-   const web3 = new Web3(Web3.givenProvider ||  Web3.providers.HttpProvider('https://testnet.emerald.oasis.dev'));
-   // console.log(new Web3(Web3.givenProvider));
-    if( window.ethereum) {
-      web3.eth.getAccounts().then((res) => {
+    web3.eth.getAccounts().then((res) => {
+      if (res.length !== 0) {
         localStorage.setItem("account", res[0]);
         dispatch(addAccount(res[0]));
-      });
-    }  
+      } else {
+        localStorage.setItem("account", "");
+        dispatch(addAccount(""));
+      }
+      console.log(res.length);
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
