@@ -15,16 +15,14 @@ import {
 } from "../reduser";
 
 export default function Navbar() {
-
   const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
-    localStorage.getItem('account') ? 
-    dispatch(addAccount(localStorage.getItem('account'))):
-    dispatch(addAccount(''));    
+    localStorage.getItem("account")
+      ? dispatch(addAccount(localStorage.getItem("account")))
+      : dispatch(addAccount(""));
   });
- 
 
   const count = useSelector(selectCount);
   const account = useSelector(hash);
@@ -35,14 +33,12 @@ export default function Navbar() {
 
   const web3 = new Web3(Web3.givenProvider);
 
- async  function SignOut() {
+  async function SignOut() {
     setviewWallet(false);
     dispatch(decrement());
     dispatch(addAccount(""));
-    localStorage.setItem('account', '');
-    Web3.givenProvider.disconnect();    
-  };
-  
+    localStorage.setItem("account", "");
+  }
 
   function updateClipboard(newClip) {
     navigator.clipboard.writeText(newClip).then(
@@ -54,7 +50,6 @@ export default function Navbar() {
       }
     );
   }
- 
 
   function Refresh() {
     setRefreshBalance(true);
@@ -65,7 +60,7 @@ export default function Navbar() {
   }
 
   const substr = account ? account.slice(7, account.length - 5) : null;
-  const new_str =  account ? account.replace(substr, "...") : null;
+  const new_str = account ? account.replace(substr, "...") : null;
   return (
     <div className="navbar_main">
       <div>
@@ -81,9 +76,7 @@ export default function Navbar() {
         <Link href="/explore/all">
           <a className="">Explore</a>
         </Link>
-        <Link href="/profile">
-          {account  && <a className="">My NFTs</a>}
-        </Link>
+        <Link href="/profile">{account && <a className="">My NFTs</a>}</Link>
         {/* <Link href="/">
           <a className="">Following</a>
         </Link> */}
@@ -159,19 +152,19 @@ export default function Navbar() {
             {/* <button>Add funds with card</button> */}
           </div>
           <Link href="/profile" passHref>
-            <button style={{ backgroundImage: "url(/static/user.png)" }} >
+            <button style={{ backgroundImage: "url(/static/user.png)" }}>
               My NFTs
             </button>
           </Link>
           {/* <button style={{ backgroundImage: "url(/static/edit.svg)" }}>
             Edit profile
           </button> */}
-          {/* <button
+          <button
             onClick={SignOut}
             style={{ backgroundImage: "url(/static/power-off.png)" }}
           >
             Sign out
-          </button> */}
+          </button>
         </div>
       )}
 
@@ -239,7 +232,6 @@ export default function Navbar() {
           padding: 0 10px;
           border-radius: 15px;
           font-family: Roboto, sans-serif;
-          
         }
         .create {
           margin-right: 20px;
