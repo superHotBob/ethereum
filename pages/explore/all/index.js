@@ -9,10 +9,9 @@ const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract
 export default function ExploreAll() {
   const [metadata, setImage] = useState([]);  
   const [size, changeSize] = useState(true);
-  const [sort, setSort] = useState(true);
-  
+  const [sort, setSort] = useState(true);  
   const web3 = new Web3(Web3.givenProvider ||  Web3.providers.HttpProvider('https://testnet.emerald.oasis.dev'));
-  console.log(web3);
+  
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
   useEffect(() => { 
       async function tokensList() {      

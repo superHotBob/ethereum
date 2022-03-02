@@ -13,7 +13,18 @@ export default function Profile() {
   const web3 = new Web3(Web3.givenProvider);
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
   useEffect(() => {
+    // const contractAddress = "0x8c43A7C2ed788059c5f7d2A4164939F3E5dd7fDF";
+    // const myContract = new web3.eth.Contract(contract.abi, contractAddress);
+    
     async function tokensList() {
+
+    //   const walletAddress = "0xce6968bC30C1Dee5741C2b2790440C18bD0DE03f";
+    // const nftBalance = await contract.methods.balanceOf(walletAddress).call();
+    // for (let i = 1; i < nftBalance; i++) {
+    //   const tokenId = await contract.methods.tokenOfOwnerByIndex(walletAddress, 1).call();
+    //   const tokenMetadataURI = await contract.methods.tokenURI(i).call();
+    //   console.log('This is tokenId', tokenMetadataURI);
+    // }
       const list = await contract.methods
         .fetchMyNFTs()
         .call({ from: window.ethereum.selectedAddress });
@@ -46,7 +57,7 @@ export default function Profile() {
   // setTimeout(()=>console.log('This is tokens', tokenId),2000);
   return (
     <div className="start_main">
-      <h1>
+      <h1 className="head_nft">
         Explore MY NFTs
         <button className="size" onClick={() => changeSize(!size)}>
           view
@@ -102,7 +113,7 @@ export default function Profile() {
             ))}
         </div>
       ) : (
-        <h1 style={{ margin: "40vh auto", width: 150 }}>
+        <h1 style={{ margin: "40vh auto", width: 150, border: 'none' }}>
           <Image src={myAwait} width={100} height={100} alt="await" />
         </h1>
       )}
@@ -210,6 +221,10 @@ export default function Profile() {
         h1 {
           text-align: left;
           font-size: 50px;
+          margin: 0;
+          padding: 20px 0;
+          font-size: 50px;
+          border-bottom: 1px solid #ddd;
         }
         h5 {
           background: #121fcf;

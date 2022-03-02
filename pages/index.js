@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css";
 import Web3 from "web3";
 import { useDispatch } from "react-redux";
 import { addAccount } from "../reduser";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -11,18 +11,20 @@ export default function Home() {
     Web3.givenProvider ||
       Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
   );
-
-  useEffect(() => {
+  
+  useLayoutEffect(() => {
+     
     web3.eth.getAccounts().then((res) => {
       if (res.length !== 0) {
-        localStorage.setItem("account", res[0]);
-        dispatch(addAccount(res[0]));
+        // localStorage.setItem("account", res[0]);
+        // dispatch(addAccount(res[0]));
       } else {
         localStorage.setItem("account", "");
         dispatch(addAccount(""));
       }
-      console.log(res.length);
+      
     });
+   
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -30,8 +32,8 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Ethereum</title>
-        <meta name="description" content="Ethereum" />
+        <title>Crystal</title>
+        <meta name="description" content="Crystal" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
