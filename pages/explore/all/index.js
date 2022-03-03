@@ -201,10 +201,13 @@ export default function ExploreAll() {
           background-size: auto 70%;
           background-repeat: no-repeat;
           background-position: center 40%;
+          transition: all 0.5;
         }
         .image_block:hover {
           box-shadow: 0px 3px 8px 5px rgba(34, 60, 80, 0.2);
           transition: all 0.5s;
+          background-size: auto 75%;
+          transition: all 0.5;
         }
         .size {
           font: 500 20px/50px Roboto, sans-serif;

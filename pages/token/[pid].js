@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { hash } from "../../reduser";
 import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
 
@@ -8,6 +10,7 @@ const Contract = require("web3-eth-contract");
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
 export default function Token() {
+  const str = useSelector(hash);
   const [viewTransfer, setViewTransfer] = useState();
   const [id, setId] = useState();
 
@@ -16,13 +19,15 @@ export default function Token() {
       let link = window.location.href;
       let link_length = link.lastIndexOf("/");
       let tokenId = Number(link.substr(link_length + 1, 1000));
-      setId(tokenId);     
-
+      setId(tokenId);
+      
       setTimeout(() => {
-        tokenId === 0 ? console.log("error", tokenId) : ReadToken();
+        ReadToken();
         async function ReadToken() {
           const my_owner = await contract.methods.ownerOf(tokenId).call();
+          console.log(my_owner);
           setOwner(my_owner);
+          setViewTransfer(my_owner === str ? true : false);
           const owner = await contract.methods.tokenURI(tokenId).call();
           fetch(`https://ipfs.io/ipfs/${owner}`, {
             method: "get",
@@ -45,7 +50,7 @@ export default function Token() {
   const [account, setAccount] = useState();
   const [result, setResult] = useState("");
 
-  async function mintNFT() {
+  async function sendNFT() {
     let link = window.location.href;
     let leng = link.lastIndexOf("/");
     let tokenId = Number(link.substr(leng + 1, 1000));
@@ -91,7 +96,13 @@ export default function Token() {
                 type="video/mp4"
               />
             ) : data.image.match("audio") ? (
-              <audio className="audio" controls loop type="audio/mpeg" src={data.image} />
+              <audio
+                className="audio"
+                controls
+                loop
+                type="audio/mpeg"
+                src={data.image}
+              />
             ) : (
               <div className="center_block" />
             )}
@@ -100,14 +111,10 @@ export default function Token() {
             <h1>{data.name}</h1>
             <h4>{data.description}</h4>
             <h3>Token Id: {id}</h3>
-            {/* <p className="creator">{data.creatorOf}</p> */}
             <p className="menu">
               <span className="Owner" onClick={() => selectMenu("Owner")}>
                 Owner
               </span>
-              {/* <span className="Details" onClick={() => selectMenu("Details")}>
-                Details
-              </span> */}
               <span className="History" onClick={() => selectMenu("History")}>
                 History
               </span>
@@ -127,23 +134,13 @@ export default function Token() {
                 <button
                   className={account ? "create_item" : "create_item disabled"}
                   disabled={!account}
-                  onClick={mintNFT}
+                  onClick={sendNFT}
                 >
                   TRANSFER THIS NFT
                 </button>
               </>
             )}
             <h3>{result}</h3>
-            {/* <div className="select_menu">
-              {menu === 'Owners' ?
-              <h3>{data.mane}</h3>: menu === 'Details' ?
-              <h3>
-                <p style={{color: 'gray',fontWeight: 500}}>Blockchain</p>
-               
-                  {data.platform}
-                
-              </h3>:null}
-            </div> */}
           </div>
           <style jsx>{`
             .video {

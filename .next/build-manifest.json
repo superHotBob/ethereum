@@ -25,15 +25,21 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
+    "/_middleware": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "server/middleware-runtime.js",
+      "server/pages/_middleware.js"
+    ],
     "/explore/all": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/explore/all.js"
     ],
-    "/profile": [
+    "/token/[pid]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/profile.js"
+      "static/chunks/pages/token/[pid].js"
     ]
   },
   "ampFirstPages": []

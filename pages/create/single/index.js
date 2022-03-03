@@ -58,7 +58,7 @@ export default function Single() {
   //   setDescription(e.target.value);
   //   // localStorage.setItem("description", e.target.value);
   // };
-  // const web3 = new Web3(Web3.givenProvider);
+  const web3 = new Web3(Web3.givenProvider);
 
   async function CreateItem() {
     const metadata = new Object();
