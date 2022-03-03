@@ -2,10 +2,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import Image from "next/image";
-import myAwait from "../../../public/image/await.gif";
+import myAwait from "../../public/image/await.gif";
 
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
-const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
+const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
 
 export default function ExploreAll() {
