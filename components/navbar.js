@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Web3 from "web3";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import refresh from "../public/image/refresh_icon.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,9 +17,9 @@ import useMetaMask from "../hooks/metamask";
 
 export default function Navbar() {
   const dispatch = useDispatch();
-  const { asPath, pathname } = useRouter();
-  console.log(asPath);
-  const { connect, disconnect, isActive, shouldDisable } = useMetaMask();
+  const { asPath } = useRouter();
+
+  const { disconnect } = useMetaMask();
 
   useEffect(() => {
     localStorage.getItem("account")
@@ -27,7 +27,7 @@ export default function Navbar() {
       : dispatch(addAccount(""));
   });
 
-  const count = useSelector(selectCount);
+  
   const account = useSelector(hash);
   const my_balance = useSelector(balance);
   const [viewWallet, setviewWallet] = useState(false);
@@ -42,7 +42,7 @@ export default function Navbar() {
     dispatch(decrement());
     dispatch(addAccount(""));
     localStorage.setItem("account", "");
-  }
+  };
 
   function updateClipboard(newClip) {
     navigator.clipboard.writeText(newClip).then(function () {
@@ -56,7 +56,7 @@ export default function Navbar() {
       dispatch(changeBalance(res / 1000000000000000000));
       setTimeout(() => setRefreshBalance(false), 1000);
     });
-  };
+  }
 
   const substr = account ? account.slice(7, account.length - 5) : null;
   const new_str = account ? account.replace(substr, "...") : null;
@@ -70,13 +70,15 @@ export default function Navbar() {
 
       <nav className="navy">
         <Link href="/explore">
-          <a className={asPath === '/explore' ? 'active':'' } >Explore</a>
+          <a className={asPath === "/explore" ? "active" : ""}>Explore</a>
         </Link>
-        <Link href="/profile">{account && 
-          <a className={asPath === '/profile' ? 'active':'' }>My NFTs</a>}
+        <Link href="/profile">
+          {account && (
+            <a className={asPath === "/profile" ? "active" : ""}>My NFTs</a>
+          )}
         </Link>
         <Link href="/activity">
-          <a className={asPath === '/activity' ? 'active':'' }>Activity</a>
+          <a className={asPath === "/activity" ? "active" : ""}>Activity</a>
         </Link>
       </nav>
       <div>
@@ -149,7 +151,7 @@ export default function Navbar() {
         </div>
       )}
 
-      <style jsx>{`        
+      <style jsx>{`
         .navbar_main {
           padding: 30px 40px;
           width: 100%;
@@ -378,7 +380,7 @@ export default function Navbar() {
           background-position: left center;
         }
         .navy a.active {
-          color: #000 ;
+          color: #000;
           border-bottom: 3px solid #000;
         }
         @keyframes rotation {

@@ -78,6 +78,7 @@ export default function Activity() {
       setTokens(new_token);
     }
     pastEvents();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
