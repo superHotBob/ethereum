@@ -3,31 +3,23 @@ import styles from "../styles/Home.module.css";
 import Web3 from "web3";
 import { useDispatch } from "react-redux";
 import { addAccount } from "../reduser";
-import { useLayoutEffect, useState, useEffect } from "react";
-import useMetaMask from '../hooks/metamask';
-
+import { useLayoutEffect } from "react";
 
 export default function Home() {
-  const {  isActive, account } = useMetaMask();
   const dispatch = useDispatch();
   const web3 = new Web3(
     Web3.givenProvider ||
       Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
   );
-  
+
   useLayoutEffect(() => {
-    
     web3.eth.getAccounts().then((res) => {
       if (res.length !== 0) {
-        // localStorage.setItem("account", res[0]);
-        // dispatch(addAccount(res[0]));
       } else {
         localStorage.setItem("account", "");
         dispatch(addAccount(""));
       }
-      
     });
-   
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -41,7 +33,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Welcome to Crystal</h1>
-       
+
         <p className={styles.text}>
           Now you can connect your wallet via Metamask
           <br /> (Emerald ParaTime testnet), create, view and transfer NFTs.

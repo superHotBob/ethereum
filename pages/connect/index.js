@@ -24,14 +24,9 @@ export default function Connect() {
   const web3 = new Web3(Web3.givenProvider);
 
   useEffect(() => {
-    const read_id = async () => {
-      // const provider = await detectEthereumProvider();
+    const read_id = async () => {     
       const chainId = await web3.eth.getChainId();
-
-      if (chainId === 42261) {
-        console.log("This is chainId", chainId);
-      } else {
-        console.log("ChainId is not true", chainId);
+      if (chainId !== 42261) {        
         viewErrorMessage(true);
       }
     };
@@ -67,10 +62,7 @@ export default function Connect() {
         router.push("/");
       } else {
         console.log("error account");
-        connect();
-        // router.push('/');
-        // viewErrorMessage(true);
-        // viewMetaMaskError('Metamask not connected');
+        connect();        
       }
     });
   }

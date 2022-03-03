@@ -6,7 +6,6 @@ import myAwait from "../../../public/image/await.gif";
 
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 const contractABI = require("../../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-// const Contract = require("web3-eth-contract");
 const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
 
 export default function ExploreAll() {
@@ -22,22 +21,19 @@ export default function ExploreAll() {
 
   useEffect(() => {
     async function tokensList() {
-      const totalSupply = await contract.methods.totalSupply().call()
-      console.log(totalSupply);
+      const totalSupply = await contract.methods.totalSupply().call();     
       const data = [];
       for (let i = 0; i < totalSupply; i++) {       
-          const tokenId = await contract.methods.tokenByIndex(i).call()
-          const tokenOwner = await contract.methods.ownerOf(tokenId).call()
-          const tokenMetadataURI = await contract.methods.tokenURI(tokenId).call()
-          console.log(tokenId, tokenOwner, tokenMetadataURI)
+          const tokenId = await contract.methods.tokenByIndex(i).call();
+          const tokenOwner = await contract.methods.ownerOf(tokenId).call();
+          const tokenMetadataURI = await contract.methods.tokenURI(tokenId).call();          
         data.push({ tokenId: tokenId, tokenMetadataURI: tokenMetadataURI,tokenOwner: tokenOwner });
-      }
-      console.log(data);
+      };
+      
 
       const my_metadata = [];
       async function ReadToken() {
-        for (const i of data) {
-          // const owner = await contract.methods.tokenURI(i).call();
+        for (const i of data) {         
           await fetch(`https://ipfs.io/ipfs/${i.tokenMetadataURI}`, {
             method: "get",
           })
@@ -50,8 +46,7 @@ export default function ExploreAll() {
                 id: i.tokenId,
               })
             );
-        }
-        console.log(my_metadata);
+        }        
         setImage(my_metadata);
       }
       ReadToken();

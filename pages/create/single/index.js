@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import closeIcon from "../../../public/image/close.svg";
 import { useSelector } from "react-redux";
 import { hash } from "../../../reduser";
@@ -14,50 +14,13 @@ const axios = require("axios");
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
 export default function Single() {
-
-  const str = useSelector(hash); 
+  const str = useSelector(hash);
   const [description, setDescription] = useState();
   const [name_nft, setNameNft] = useState();
   const [type_nft, setTypeNft] = useState();
   const [error_message, setErrorMessage] = useState("none");
   const [imageNft, selectedImageNft] = useState();
 
-  // useEffect(() => {
-  //   const nameNft = localStorage.getItem("name");
-  //   const typeNft = localStorage.getItem("type_nft");
-  //   const imageNft = localStorage.getItem("nft");
-  //   const descriptionNft = localStorage.getItem("description");
-  //   setTimeout(() => selectedImageNft(imageNft), 1000);
-  //   setTypeNtf(typeNft);
-  //   setNameNtf(nameNft);
-  //   setDescription(descriptionNft);
-  // }, []);
-
-  // const SetMyPrice = (e) => {
-  //   const old = my_price;
-  //   console.log(Number(e.target.value) === e.target.value);
-  //   if (Number(e.target.value) !== "NaN") {
-  //     setMyPrice(e.target.value);
-  //     console.log(my_price);
-  //   } else if (Number(e.target.value) === 0) {
-  //     setMyPrice();
-  //   } else {
-  //     setMyPrice(old);
-  //   }
-  // };
-
-  // const SetNameNft = (e) => {
-  //   setNameNtf(e.target.value);
-  //   // localStorage.setItem("name", e.target.value);
-  // };
-  // const removeImage = () => {
-  //   selectedImageNft();
-  //   // localStorage.setItem("nft", "");
-  // };
-  // const SetDescription = (e) => {
-  //   setDescription(e.target.value);
-  //   // localStorage.setItem("description", e.target.value);
-  // };
   const web3 = new Web3(Web3.givenProvider);
 
   async function CreateItem() {
@@ -79,15 +42,9 @@ export default function Single() {
         let metadata = response.data.IpfsHash;
         console.log("Metadata", metadata);
         const Mycontract = await new Contract(contractABI.abi, contractAddress);
-        // const transactionParameters = {
-        //   to: res.contractAddress, // Required except during contract publications.
-        //   from: window.ethereum.selectedAddress, // must match user's active address.
         const Mydata = Mycontract.methods
           .mintNFT(window.ethereum.selectedAddress, metadata)
           .encodeABI();
-        // const my_nonce = await web3.eth.getTransactionCount(window.ethereum.selectedAddress, 'latest');
-        // console.log('This is nonce',my_nonce);
-        // console.log('This is contract data', Mydata);
         web3.eth
           .sendTransaction({
             from: window.ethereum.selectedAddress,
@@ -95,108 +52,26 @@ export default function Single() {
             data: Mydata,
           })
           .then((res) => {
-            let id = web3.utils.hexToNumber(res.logs[1].topics[3]);
-            console.log(id);
-            // dispatch(setTokenId(id));
+            let id = web3.utils.hexToNumber(res.logs[1].topics[3]);          
             Router.push(`/token/${id}`);
           })
           .then((err) => console.log(err));
-
-        
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(function (error) {        
         return {
           success: false,
           message: console.log(error.message),
         };
       });
-  };  
-    
-
-    // const Mycontract = await new Contract(contractABI.abi, contractAddress);
-    // // const transactionParameters = {
-    // //   to: res.contractAddress, // Required except during contract publications.
-    // //   from: window.ethereum.selectedAddress, // must match user's active address.
-    // const Mydata = Mycontract.methods
-    //   .mintNFT(window.ethereum.selectedAddress, metadata.url).encodeABI();
-    // // const my_nonce = await web3.eth.getTransactionCount(window.ethereum.selectedAddress, 'latest');
-    // // console.log('This is nonce',my_nonce);
-    // // console.log('This is contract data', Mydata);
-    // web3.eth
-    //   .sendTransaction({
-    //     from: window.ethereum.selectedAddress,
-    //     to: contractAddress,
-    //     data: Mydata,
-    //   })
-    //   .then(res=>{
-    //     console.log(res);
-    //     console.log(res.logs[1].topics[3]);
-    //     dispatch(setTokenId(res.logs[1].topics[3]));
-    //     Router.push('/token');
-    //   })
-    //   .then(err=>console.log(err));
-    // const postData = {
-    //   file: nft,
-    //   address: str,
-    //   name: name_nft,
-    //   description: description,
-    //   unlock_content: unlock_content.current ?
-    //   unlock_content.current.valie :
-    //   null,
-    // };
-    // try {
-    //   const res = await fetch(`${baseURL}/item`, {
-    //     method: "post",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "x-access-token": "token-value",
-    //     },
-    //     body: JSON.stringify(postData),
-    //   })
-    //   .then(res =>res.json());
-
-    //   try {
-    //        const txHash =  await window.ethereum
-    //           .request({
-    //                method: 'eth_sendTransaction',
-    //              params: [transactionParameters],
-    //           });
-    //        return {
-    //           success: true,
-    //          status: console.log("✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash)
-    //       }
-    //    } catch (error) {
-    //        return {
-    //            success: false,
-    //          status: console.log("😥 Something went wrong: " + error.message)
-
-    //      }
-
-    //  }
- 
-  // const SetRoyalties = (e) => {
-  //   let data = e.target.value;
-  //   console.log(data.search(/[a-zA-Z]/gi) === -1 && data.length < 3);
-  //   if (data.search(/[a-zA-Z]/gi) === -1 && data.length < 3) {
-  //     setRoyalties(data);
-  //   } else {
-  //     setRoyalties("");
-  //   }
-  // };
+  }
 
   const viewImage = async (event) => {
-    let file =  event.target.files[0];
+    let file = event.target.files[0];
     setTypeNft(file.type);
     console.log(file);
     const reader = new FileReader();
-    // const url =  reader.readAsDataURL(file);
-    // console.log(url);
     reader.onloadend = function () {
       selectedImageNft(reader.result);
-      // localStorage.setItem("nft", reader.result);
-      // localStorage.setItem("type_nft", file.type);
-      
     };
     reader.readAsDataURL(file);
   };
@@ -205,12 +80,11 @@ export default function Single() {
     <div className="single_main">
       <h1>Create single item on Oasis </h1>
       <div className="main_choose_file">
-      
         <div className="choose_file">
           {imageNft ? (
             <div>
               <h5 className="icon_close">
-                <button onClick={()=>selectedImageNft()}>
+                <button onClick={() => selectedImageNft()}>
                   <Image
                     alt="close"
                     src={closeIcon}
@@ -229,21 +103,16 @@ export default function Single() {
                   type="video/mp4"
                 />
               ) : type_nft === "audio/mpeg" ? (
-               
                 <audio
                   controls
                   loop
-                  autoPlay                 
+                  autoPlay
                   type="audio/mpeg"
                   src={imageNft}
                 />
-                 
               ) : (
-              <div className="main_image"/>
-                
-             
-             
-              )} 
+                <div className="main_image" />
+              )}
             </div>
           ) : (
             <>
@@ -256,128 +125,13 @@ export default function Single() {
                     id="file"
                     name="file"
                     accept="image/png, image/gif, image/webp, image/jpeg, video/mp4,audio/mp3"
-                    onChange={(e)=>viewImage(e)}
+                    onChange={(e) => viewImage(e)}
                   />
                 </label>
-                </form>
+              </form>
             </>
           )}
         </div>
-
-        {/* <h3 className="put_on_market">
-          Put on marketplace
-          <button
-            className={putMarket ? "left" : "right"}
-            onClick={() => setPutMarket(!putMarket)}
-          >
-            <b className={putMarket ? "left_b" : "right_b"}></b>
-          </button>
-        </h3>
-        <p>Enter price to allow users instantly purchase your NFT</p> */}
-        {/* <div className="select">
-          <span
-            onClick={() => setPrice(0)}
-            style={{ borderColor: price === 0 ? "blue" : "gray" }}
-          >
-            <img src="/fixed_price.svg" />
-            fixed <br />
-            price
-          </span>
-          <span
-            onClick={() => setPrice(1)}
-            style={{ borderColor: price === 1 ? "blue" : "gray" }}
-          >
-            <img src="/open_bid.svg" />
-            Open for
-            <br />
-            big
-          </span>
-          <span
-            onClick={() => setPrice(2)}
-            style={{ borderColor: price === 2 ? "blue" : "gray" }}
-          >
-            <img src="/auction.svg" />
-            Timed <br />
-            auction
-          </span>
-        </div> */}
-        {/* {price === 0 ? (
-          <>
-            <label className="price">
-              Price {my_price}
-              <input
-                type="text"
-                placeholder="Enter price for one piece"
-                value={my_price}
-                onChange={SetMyPrice}
-              
-              />
-            </label>
-            <p className="service_fee">
-              Service fee <b>2.5%</b>
-            </p>
-
-            <p>You recieve </p>
-          </>
-        ) : null} */}
-        {/* <h3 className="put_on_market unlock">
-          Unlock once purchased
-          <button
-            className={unlock ? "left" : "right"}
-            onClick={() => setUnlock(!unlock)}
-          >
-            <b className={unlock ? "left_b" : "right_b"}></b>
-          </button>
-        </h3>
-        <p>Content will be unlocked after successful transaction</p> */}
-        {/* {!unlock && (
-          <>
-            <label className="price">
-              <input
-                type="text"
-                placeholder="Digital key, code to redeem or link to a file ..."
-                ref={unlock_content}
-                onChange={SetMyPrice}
-              />
-            </label>
-            <p>&#34;Locked content&#34; is not allowed to be empty</p>
-          </>
-        )} */}
-        {/* <h3>Choose collection</h3>
-        <div className="select collection">
-          <div
-            onClick={() => setPrice(0)}
-            style={{
-              borderColor: price === 0 ? "blue" : "rgba(4, 4, 5, 0.1)",
-              marginRight: 20,
-            }}
-          >
-            <Image src="/static/plus.svg" alt="plus" width={50} height={50} />
-            <br />
-            Create <br />
-            <b>ERC-721</b>
-          </div>
-          <div
-            onClick={() => setPrice(1)}
-            style={{ borderColor: price === 1 ? "blue" : "rgba(4, 4, 5, 0.1)" }}
-          >
-            <span className="icon__oasis">O</span>
-            <br />
-            Oasis
-            <br />
-            <b>ROSE</b>
-          </div>
-        </div> */}
-        {/* <h3 className="put_on_market">
-          Free minting
-          <button
-            className={minting ? "left" : "right"}
-            onClick={() => setMinting(!minting)}
-          >
-            <b className={minting ? "left_b" : "right_b"}></b>
-          </button>
-        </h3>
-        <p>Buyer will pay gas fees for minting</p> */}
 
         <label className="price">
           <span>Name</span>
@@ -385,7 +139,7 @@ export default function Single() {
             type="text"
             placeholder="e. g. 'Redeemable T-Shirt with logo'"
             value={name_nft}
-            onChange={(e)=>setNameNft(e.target.value)}
+            onChange={(e) => setNameNft(e.target.value)}
           />
         </label>
         {!name_nft && (
@@ -408,20 +162,11 @@ export default function Single() {
             type="text"
             placeholder="e. g. 'After purchasing you’ll be able to get the real T-Shirt'"
             value={description}
-            onChange={(e)=>setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </label>
         <p>With preserved line-breaks</p>
-        {/* <label className="price royalties">
-          Royalties
-          <input
-            type="text"
-            placeholder="e. g. 10%"
-            value={royalties}
-            onChange={SetRoyalties}
-          />
-        </label>
-        <button className="show_advansed">Show advanced setting</button> */}
+
         <div className="create_item_block">
           <button
             className={
@@ -441,7 +186,7 @@ export default function Single() {
       </div>
       <div className="preview_file">
         <div style={{ marginTop: 100 }}>
-          { (type_nft === "video/mp4" && imageNft) ? 
+          {type_nft === "video/mp4" && imageNft ? (
             <video
               width="100%"
               autoPlay
@@ -449,16 +194,16 @@ export default function Single() {
               mute
               src={imageNft}
               type="video/mp4"
-            /> 
-            :  (type_nft === "audio/mpeg" && imageNft) ? 
+            />
+          ) : type_nft === "audio/mpeg" && imageNft ? (
             <audio
               className="audio"
               controls
-              loop                           
+              loop
               type="audio/mpeg"
               src={imageNft}
-            /> : null
-          }
+            />
+          ) : null}
         </div>
         {!imageNft && <p>Upload file to preview your brand new NFT</p>}
       </div>
@@ -716,7 +461,7 @@ export default function Single() {
             position: absolute;
             top: 40px;
           }
-         
+
           .create_item,
           .show_advansed {
             padding: 18px;

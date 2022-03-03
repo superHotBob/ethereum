@@ -3,7 +3,6 @@ import Image from "next/image";
 import Web3 from "web3";
 import React, { useState, useEffect } from "react";
 import refresh from "../public/image/refresh_icon.png";
-import Router, { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrement,
@@ -13,13 +12,12 @@ import {
   hash,
   balance,
 } from "../reduser";
-import useMetaMask from '../hooks/metamask';
+import useMetaMask from "../hooks/metamask";
 
 export default function Navbar() {
   const dispatch = useDispatch();
-  const router = useRouter();
 
-  const { connect, disconnect, isActive,  shouldDisable } = useMetaMask();
+  const { connect, disconnect, isActive, shouldDisable } = useMetaMask();
 
   useEffect(() => {
     localStorage.getItem("account")
@@ -42,19 +40,13 @@ export default function Navbar() {
     dispatch(decrement());
     dispatch(addAccount(""));
     localStorage.setItem("account", "");
-   
   }
 
   function updateClipboard(newClip) {
-    navigator.clipboard.writeText(newClip).then(
-      function () {
-        setTextCopy("Copied");
-      },
-      function () {
-        console.log("No write to buffer");
-      }
-    );
-  }
+    navigator.clipboard.writeText(newClip).then(function () {
+      setTextCopy("Copied");
+    });
+  };
 
   function Refresh() {
     setRefreshBalance(true);
@@ -62,7 +54,7 @@ export default function Navbar() {
       dispatch(changeBalance(res / 1000000000000000000));
       setTimeout(() => setRefreshBalance(false), 1000);
     });
-  }
+  };
 
   const substr = account ? account.slice(7, account.length - 5) : null;
   const new_str = account ? account.replace(substr, "...") : null;
@@ -72,9 +64,6 @@ export default function Navbar() {
         <Link href="/">
           <a className="to_main_page">Home page</a>
         </Link>
-        {/* <label>
-          <input type="search" placeholder="Colection, item or user" />
-        </label> */}
       </div>
 
       <nav className="navy">
@@ -82,13 +71,9 @@ export default function Navbar() {
           <a className="">Explore</a>
         </Link>
         <Link href="/profile">{account && <a className="">My NFTs</a>}</Link>
-        {/* <Link href="/">
-          <a className="">Following</a>
-        </Link> */}
-        <Link href="/">
+        <Link href="/activity">
           <a className="">Activity</a>
         </Link>
-        {/* <span>...</span> */}
       </nav>
       <div>
         {!account ? (
@@ -145,25 +130,12 @@ export default function Navbar() {
                 </>
               )}
             </div>
-            {/* <div style={{ backgroundImage: "url(/static/ethereum.svg)" }}>
-                Bidding Balance<br/>
-                <b>0 WETH</b> 
-                <button>Convert</button>
-            </div> */}
-            {/* <div>
-                <b>0 RARI</b> 
-                <button>Claim</button>
-            </div> */}
-            {/* <button>Add funds with card</button> */}
           </div>
           <Link href="/profile" passHref>
             <button style={{ backgroundImage: "url(/static/user.png)" }}>
               My NFTs
             </button>
           </Link>
-          {/* <button style={{ backgroundImage: "url(/static/edit.svg)" }}>
-            Edit profile
-          </button> */}
           <button
             onClick={SignOut}
             style={{ backgroundImage: "url(/static/power-off.png)" }}

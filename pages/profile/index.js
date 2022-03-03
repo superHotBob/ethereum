@@ -2,15 +2,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { hash } from "../../reduser";
 import myAwait from "../../public/image/await.gif";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
-const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
-
-
+// const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
 
 export default function Profile() {
+
+  const my_wallet = useSelector(hash);
 
   const [metadata, setMetadata] = useState([]);
   const [sort, setSort] = useState(true);
@@ -24,12 +25,12 @@ export default function Profile() {
 
   useEffect(() => {
     async function tokensList() {
-      const nftBalance = await contract.methods.balanceOf(walletAddress).call();
+      const nftBalance = await contract.methods.balanceOf(my_wallet).call();
       console.log(nftBalance);
       const data = [];
       for (let i = 0; i < nftBalance; i++) {
         const tokenId = await contract.methods
-          .tokenOfOwnerByIndex(walletAddress, i)
+          .tokenOfOwnerByIndex(my_wallet, i)
           .call();
         const tokenMetadataURI = await contract.methods
           .tokenURI(tokenId)
@@ -40,7 +41,7 @@ export default function Profile() {
 
       const my_metadata = [];
       async function ReadToken() {
-        for (const i of data) {          
+        for (const i of data) {
           await fetch(`https://ipfs.io/ipfs/${i.tokenMetadataURI}`, {
             method: "get",
           })
@@ -53,7 +54,7 @@ export default function Profile() {
                 id: i.tokenId,
               })
             );
-        }       
+        }
         setMetadata(my_metadata);
       }
       ReadToken();
@@ -61,7 +62,7 @@ export default function Profile() {
     tokensList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   return (
     <div className="start_main">
       <h1 className="head_nft">
@@ -102,16 +103,9 @@ export default function Profile() {
                         <audio controls loop type="audio/mpeg" src={i.image} />
                       </div>
                     )}
-                    {/* <p className="bolls">
-                      <span className="collection main">ENS</span>
-                      <span className="collection owner"></span>
-                      <span className="collection creator"></span>
-                    </p> */}
                     <h3 className="name_image">
                       {i.name}
-                      {/* <span className="icon_close">
-                        <Image src="/static/ethereum.svg"  width={30} height={30} alt="ethereum" />
-                      </span> */}
+
                       <p className="description">{i.description}</p>
                     </h3>
                   </div>
