@@ -6,7 +6,7 @@ import myAwait from "../../public/image/await.gif";
 
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
+
 
 export default function ExploreAll() {
   const [metadata, setImage] = useState([]);
@@ -82,7 +82,7 @@ export default function ExploreAll() {
                       <span className="collection owner"></span>
                       <span className="collection creator"></span>
                     </p> */}
-                    tokenId:{i.id}
+                    token Id: <b>{i.id}</b>
                     {i.image.search("video") > 0 && (
                       <div style={{ marginTop: "15%" }}>
                         <video

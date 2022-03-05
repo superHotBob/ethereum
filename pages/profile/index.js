@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { hash } from "../../reduser";
+import { walletAddress } from "../../reduser";
 import myAwait from "../../public/image/await.gif";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
-// const walletAddress = "0xE9252e37E406B368Ad38d201800bF421978af659";
+
 
 export default function Profile() {
 
-  const my_wallet = useSelector(hash);
+  const my_wallet = useSelector(walletAddress);
 
   const [metadata, setMetadata] = useState([]);
   const [sort, setSort] = useState(true);

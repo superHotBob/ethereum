@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { useRouter } from "next/router";
 import Web3 from "web3";
+const axios = require("axios");
 import Image from "next/image";
 import metamask from "../../public/image/metamask.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,8 +19,8 @@ export default function Connect() {
     "You are connected to an unsupported network"
   );
 
-  const { connect, disconnect, isActive, account, shouldDisable } =
-    useMetaMask();
+  const { connect,  account } = useMetaMask();
+    
 
   const web3 = new Web3(Web3.givenProvider);
 
@@ -36,6 +37,15 @@ export default function Connect() {
 
   useEffect(() => ReadAccountNext(), [account]);
 
+  function SendToBack (a) {
+    axios.post("http://localhost:5000/api/tokens", { tokens: a }).then((res) => {
+      console.log(res);
+      console.log(res.data);
+    });
+
+  };
+
+
   async function ReadAccountNext() {
     await web3.eth.getAccounts().then((res) => {
       if (res[0] > 0) {
@@ -46,6 +56,8 @@ export default function Connect() {
         dispatch(addAccount(res[0]));
         localStorage.setItem("account", res[0]);
         router.push("/");
+        SendToBack(res[0]);
+        
       }
     });
   }
@@ -59,6 +71,7 @@ export default function Connect() {
         dispatch(increment());
         dispatch(addAccount(res[0]));
         localStorage.setItem("account", res[0]);
+        SendToBack(res[0]);
         router.push("/");
       } else {
         console.log("error account");

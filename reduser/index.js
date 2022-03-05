@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: false,
-  status: "idle",
-  hash: "",
+ 
+ 
+  walletAddress: "",
   balance: 0,
   token: "",
   tokenId: 0,
@@ -16,11 +16,9 @@ export const counterSlice = createSlice({
     increment: (state) => {
       state.value = true;
     },
-    decrement: (state) => {
-      state.value = false;
-    },
+    
     addAccount: (state, action) => {
-      state.hash = action.payload;
+      state.walletAddress = action.payload;
     },
     changeBalance: (state, action) => {
       state.balance = action.payload;
@@ -36,7 +34,7 @@ export const counterSlice = createSlice({
 
 export const {
   increment,
-  decrement,
+ 
   addAccount,
   changeBalance,
   setToken,
@@ -44,7 +42,7 @@ export const {
 } = counterSlice.actions;
 
 export const selectCount = (state) => state.counter.value;
-export const hash = (state) => state.counter.hash;
+export const walletAddress = (state) => state.counter.walletAddress;
 export const balance = (state) => state.counter.balance;
 export const token = (state) => state.counter.token;
 export const tokenId = (state) => state.counter.tokenId;

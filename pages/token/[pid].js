@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { hash } from "../../reduser";
+import { walletAddress } from "../../reduser";
 import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
-
+ const axios = require("axios");
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const Contract = require("web3-eth-contract");
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
 export default function Token() {
-  const str = useSelector(hash);
+  const str = useSelector(walletAddress);
   const [viewTransfer, setViewTransfer] = useState();
   const [id, setId] = useState();
+
+ 
 
   useEffect(() => {
     async function fetchNft() {

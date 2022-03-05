@@ -1,9 +1,10 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Web3 from "web3";
+const axios = require("axios");
 import { useDispatch } from "react-redux";
 import { addAccount } from "../reduser";
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -11,10 +12,18 @@ export default function Home() {
     Web3.givenProvider ||
       Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
   );
+  function SendToBack (a) {
+    axios.post("http://localhost:3000/auth/login", { accounAddress: a }).then((res) => {
+      localStorage.setItem("jwt", res.data.token);
+      console.log(res.data);
+    });
 
-  useLayoutEffect(() => {
+  };
+
+  useEffect(() => {
     web3.eth.getAccounts().then((res) => {
       if (res.length !== 0) {
+        SendToBack(res[0]);
       } else {
         localStorage.setItem("account", "");
         dispatch(addAccount(""));

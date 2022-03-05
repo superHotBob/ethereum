@@ -1,18 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import copy from '../public/image/copy.svg';
+import close from '../public/image/Icon_close.png';
 import Web3 from "web3";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import refresh from "../public/image/refresh_icon.png";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  decrement,
-  selectCount,
-  addAccount,
-  changeBalance,
-  hash,
-  balance,
-} from "../reduser";
+import { addAccount, changeBalance, walletAddress, balance } from "../reduser";
 import useMetaMask from "../hooks/metamask";
 
 export default function Navbar() {
@@ -27,8 +22,7 @@ export default function Navbar() {
       : dispatch(addAccount(""));
   });
 
-  
-  const account = useSelector(hash);
+  const account = useSelector(walletAddress);
   const my_balance = useSelector(balance);
   const [viewWallet, setviewWallet] = useState(false);
   const [textCopy, setTextCopy] = useState("copy to clipboard");
@@ -39,16 +33,15 @@ export default function Navbar() {
   async function SignOut() {
     disconnect();
     setviewWallet(false);
-    dispatch(decrement());
     dispatch(addAccount(""));
     localStorage.setItem("account", "");
-  };
+  }
 
   function updateClipboard(newClip) {
     navigator.clipboard.writeText(newClip).then(function () {
       setTextCopy("Copied");
     });
-  };
+  }
 
   function Refresh() {
     setRefreshBalance(true);
@@ -61,7 +54,7 @@ export default function Navbar() {
   const substr = account ? account.slice(7, account.length - 5) : null;
   const new_str = account ? account.replace(substr, "...") : null;
   return (
-    <div className="navbar_main">
+    <div className="NavbarMain">
       <div>
         <Link href="/">
           <a className="to_main_page">Home page</a>
@@ -90,7 +83,7 @@ export default function Navbar() {
         {account && (
           <span className="open_wallet" onClick={() => setviewWallet(true)} />
         )}
-        <Link href="/create/single">
+        <Link href="/create">
           <a className="create">Create</a>
         </Link>
       </div>
@@ -99,7 +92,7 @@ export default function Navbar() {
           <span className="close">
             <Image
               alt="close"
-              src="/static/Icon_close.png"
+              src={close}
               width={20}
               height={20}
               onClick={() => setviewWallet(false)}
@@ -109,7 +102,7 @@ export default function Navbar() {
             {new_str}{" "}
             <span className="copy_account">
               <Image
-                src="/static/copy.svg"
+                src={copy}
                 width={18}
                 height={18}
                 alt="copy"
@@ -119,7 +112,7 @@ export default function Navbar() {
           </h2>
           <div className="balance">
             <div
-              style={{ backgroundImage: "url(/static/ethereum.svg)" }}
+              style={{ backgroundImage: 'url(/image/ethereum.svg)' }}
               className="my__hash"
             >
               {refresh_balance ? (
@@ -138,13 +131,13 @@ export default function Navbar() {
             </div>
           </div>
           <Link href="/profile" passHref>
-            <button style={{ backgroundImage: "url(/static/user.png)" }}>
+            <button style={{ backgroundImage: 'url(/image/user.png)' }}>
               My NFTs
             </button>
           </Link>
           <button
             onClick={SignOut}
-            style={{ backgroundImage: "url(/static/power-off.png)" }}
+            style={{ backgroundImage: 'url(/image/power-off.png)' }}
           >
             Sign out
           </button>
@@ -152,15 +145,17 @@ export default function Navbar() {
       )}
 
       <style jsx>{`
-        .navbar_main {
-          padding: 30px 40px;
-          width: 100%;
+        .NavbarMain {
+          padding: 30px 0;
+          width: 90%;
+          margin: 0 auto;
           position: fixed;
           display: flex;
           z-index: 2;
           flex-direction: row;
           justify-content: space-between;
           top: 0;
+          left: 5%;
           font-family: Roboto, sans-serif;
           background: #fff;
         }
@@ -172,7 +167,7 @@ export default function Navbar() {
           border-radius: 40px;
           vertical-align: bottom;
           float: right;
-          margin-right: 20px;
+         
           cursor: pointer;
         }
         .navy {
@@ -212,7 +207,7 @@ export default function Navbar() {
           line-height: 60px;
           font-size: 18px;
           font-weight: 700;
-          padding: 0 10px;
+         
           border-radius: 15px;
           font-family: Roboto, sans-serif;
         }
@@ -282,7 +277,7 @@ export default function Navbar() {
           position: absolute;
           top: 120px;
           padding: 10px;
-          right: 60px;
+          right: 0;
           background: #fff;
           box-shadow: 0px 0px 27px 0px rgba(34, 60, 80, 0.2);
         }
