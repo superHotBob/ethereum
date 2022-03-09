@@ -35,6 +35,7 @@ export default function Navbar() {
     setviewWallet(false);
     dispatch(addAccount(""));
     localStorage.setItem("account", "");
+    localStorage.setItem("jwt", "");
   }
 
   function updateClipboard(newClip) {
