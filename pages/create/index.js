@@ -19,6 +19,23 @@ export default function Single() {
 
   const web3 = new Web3(Web3.givenProvider);
 
+  function SendToBack (a) {
+   
+    axios.post("http://localhost:5000/api/minting",
+     { 
+       tokenId: a,
+       author: window.ethereum.selectedAddress,     
+       datecreate: new Date,
+       cid: '',
+       owner: '',       
+     },{headers:
+      {'Authorization':  localStorage.getItem("jwt")}}).then((res) => {
+      localStorage.setItem("jwt", res.data.token);
+      console.log(res.data);
+    });
+
+  };
+
   async function CreateItem() {
     const metadata = new Object();
     metadata.name = name_nft;
@@ -57,6 +74,7 @@ export default function Single() {
             console.log(res.logs);
             let id = web3.utils.hexToNumber(res.logs[0].topics[3]);          
             Router.push(`/token/${id}`);
+            SendToBack(id);
           })
           .then((err) => console.log(err));
       })

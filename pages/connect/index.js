@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import detectEthereumProvider from "@metamask/detect-provider";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 const axios = require("axios");
@@ -36,7 +35,6 @@ export default function Connect() {
   }, []);
 
   useEffect(() => ReadAccountNext(), [account]);
-
   function SendToBack (a) {
     axios.post("http://localhost:5000/api/tokens", { tokens: a }).then((res) => {
       console.log(res);
@@ -83,7 +81,7 @@ export default function Connect() {
   return (
     <div className="connect_main">
       <Link href="/">
-        <a className="to_main_page">Home page</a>
+        <a className="link__mainPage">Home page</a>
       </Link>
 
       {metaMask ? (
@@ -123,7 +121,7 @@ export default function Connect() {
           padding-left: 35%;
           padding-top: 20%;
         }
-        .to_main_page {
+        .link__mainPage {
           position: absolute;
           font-size: 20px;
           top: 30px;

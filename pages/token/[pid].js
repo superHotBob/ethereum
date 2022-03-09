@@ -14,6 +14,17 @@ export default function Token() {
   const [viewTransfer, setViewTransfer] = useState();
   const [id, setId] = useState();
 
+  function Transfer (a, b ) {
+    axios.post("http://localhost:5000/api/transfer", 
+    {from: str,
+    to: a,
+    tokenId: b,
+    date: new Date }
+    ).then((res) => {      
+      console.log(res.data);
+    });
+  };
+
  
 
   useEffect(() => {
@@ -61,7 +72,7 @@ export default function Token() {
       to: contractAddress,
       from: window.ethereum.selectedAddress,
       data: window.contract.methods
-        .safeTransferFrom(window.ethereum.selectedAddress, account, tokenId)
+        .safeTransferFrom(str, account, tokenId)
         .encodeABI(),
     };
     try {
@@ -69,9 +80,9 @@ export default function Token() {
         method: "eth_sendTransaction",
         params: [transactionParameters],
       });
-      return {
-        success: setResult("Transfer success"),
-        status: console.log("✅ transaction success"),
+      return {       
+          success: ()=> {Transfer( account, id );setResult( "Transfer success" )},
+          status: console.log("✅ transaction success")
       };
     } catch (error) {
       return {
