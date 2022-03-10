@@ -20,20 +20,23 @@ export default function ExploreAll() {
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
   useEffect(() => {
+    
     async function tokensList() {
       const totalSupply = await contract.methods.totalSupply().call();     
       const data = [];
       for (let i = 0; i < totalSupply; i++) {       
           const tokenId = await contract.methods.tokenByIndex(i).call();
           const tokenOwner = await contract.methods.ownerOf(tokenId).call();
-          const tokenMetadataURI = await contract.methods.tokenURI(tokenId).call();          
+          const tokenMetadataURI = await contract.methods.tokenURI(tokenId).call();
+                  
         data.push({ tokenId: tokenId, tokenMetadataURI: tokenMetadataURI,tokenOwner: tokenOwner });
       };
       
 
       const my_metadata = [];
       async function ReadToken() {
-        for (const i of data) {         
+        for (const i of data) { 
+          console.log(data);        
           await fetch(`https://ipfs.io/ipfs/${i.tokenMetadataURI}`, {
             method: "get",
           })

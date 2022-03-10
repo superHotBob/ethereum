@@ -7,7 +7,7 @@ const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
 const local = 'http://localhost:5000/api/transactions';
 const global = 'https://myoasisserver.herokuapp.com/api/transactions';
-const link = global;
+const link = local;
 
 const axios = require("axios");
 const web3 = new Web3(
@@ -28,7 +28,7 @@ export default function Activity() {
     axios.get(link, 
       {headers: { 'authorization': localStorage.getItem('jwt') }})
     .then((res) => setTokens(res.data))
-    .then(err => router.push('/'))    
+       
   };
   
   

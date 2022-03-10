@@ -54,7 +54,7 @@ export default function Connect() {
         dispatch(addAccount(res[0]));
         localStorage.setItem("account", res[0]);
         router.push("/");
-        SendToBack(res[0]);
+        // SendToBack(res[0]);
         
       }
     });
@@ -77,6 +77,7 @@ export default function Connect() {
       }
     });
   }
+
 
   return (
     <div className="connect_main">

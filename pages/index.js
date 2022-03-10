@@ -32,7 +32,7 @@ export default function Home() {
 
   useEffect(() => {
     web3.eth.getAccounts().then((res) => {
-      if (res.length !== 0) {
+      if (res.length !== 0 && localStorage.getItem('account')) {
         web3.eth.getBalance(res[0]).then((responce) => {
           dispatch(changeBalance(responce / 1000000000000000000)); 
           SendToBack(res[0],(responce / 1000000000000000000));         
