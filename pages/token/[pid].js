@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { walletAddress } from "../../reduser";
+import { token, tokenId, walletAddress } from "../../reduser";
 import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
  const axios = require("axios");
@@ -9,31 +9,50 @@ const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-ab
 const Contract = require("web3-eth-contract");
 const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
 
+const local = "http://localhost:5000/api/transactions";
+const global = "https://myoasisserver.herokuapp.com/api/transactions";
+const mylink = global;
+
 export default function Token() {
   const str = useSelector(walletAddress);
   const [viewTransfer, setViewTransfer] = useState();
   const [id, setId] = useState();
 
-  function Transfer (a, b ) {
-    axios.post("http://localhost:5000/api/transfer", 
-    {from: str,
-    to: a,
-    tokenId: b,
-    date: new Date }
-    ).then((res) => {      
-      console.log(res.data);
-    });
-  };
+  const [alltoken, setAllTokens] = useState([]);
 
- 
+  // function Transfer (a, b ) {
+  //   axios.post("http://localhost:5000/api/transfer", 
+  //   {from: str,
+  //   to: a,
+  //   tokenId: b,
+  //   date: new Date }
+  //   ).then((res) => {      
+  //     console.log(res.data);
+  //   });
+  // };
+  // function Refresh() {
+  //   axios
+  //     .get(link, { headers: { authorization: localStorage.getItem("jwt") } })
+  //     .then((res) => setTokens(res.data));
+  // }
+  
+  useEffect(()=>{
+    async function myFetch() {
+      fetch(mylink,  { method: 'get', headers: { authorization: localStorage.getItem("jwt") } })
+      .then((res) => res.json())
+      // .then((res=>console.log(res)))
+      .then((res) => setAllTokens(res));
+    }
+    myFetch()
+  },[])
 
-  useEffect(() => {
+  useEffect(() => {    
     async function fetchNft() {
       let link = window.location.href;
       let link_length = link.lastIndexOf("/");
       let tokenId = Number(link.substr(link_length + 1, 1000));
       setId(tokenId);
-      
+     
       setTimeout(() => {
         ReadToken();
         async function ReadToken() {
@@ -51,6 +70,7 @@ export default function Token() {
       }, 100);
     }
     fetchNft();
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -81,7 +101,7 @@ export default function Token() {
         params: [transactionParameters],
       });
       return {       
-          success: ()=> {Transfer( account, id );setResult( "Transfer success" )},
+          success: setResult( "Transfer success" ),
           status: console.log("✅ transaction success")
       };
     } catch (error) {
@@ -153,6 +173,8 @@ export default function Token() {
                 </button>
               </>
             )}
+            {menu === 'History' && <>
+            {alltoken.filter(i=>i.tokenid == id).map(i=><h3 key={i.newuser}>{i.newuser}</h3>)}</>}
             <h3>{result}</h3>
           </div>
           <style jsx>{`
