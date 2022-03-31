@@ -8,7 +8,7 @@ const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-ab
 const Contract = require("web3-eth-contract");
 
 
-const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const contractAddress = "0xFd9406A502088d5436be2f65ddae1e3f401b55a9";
 
 export default function Single() {  
   const [description, setDescription] = useState();
@@ -19,8 +19,7 @@ export default function Single() {
 
   const web3 = new Web3(Web3.givenProvider);
 
-  function SendToBack (a) {
-   
+  function SendToBack (a) {   
     axios.post("http://localhost:5000/api/minting",
      { 
        tokenId: a,
@@ -55,7 +54,7 @@ export default function Single() {
         let metadata = response.data.IpfsHash;        
         const Mycontract = await new Contract(contractABI.abi, contractAddress);
         const Mydata = Mycontract.methods
-          .mintNFT(window.ethereum.selectedAddress, metadata)
+          .safeMint(window.ethereum.selectedAddress, metadata)
           .encodeABI();
         web3.eth
           .sendTransaction({
@@ -65,7 +64,7 @@ export default function Single() {
           })
           .then((res) => {
             axios.post(url, {
-        headers: {
+          headers: {
           pinata_api_key: "8e18148843cb5c17cd92",
           pinata_secret_api_key:
             "a94689cdb6130f38863f0ebb6675eee19bd11556bd5f6bd6b1963e0ae3814ba4",
