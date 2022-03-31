@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Web3 from "web3";
 import { useRouter } from "next/router";
 const contractABI = require("../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const contractAddress = "0xf1d84e8fF2d0B9e937c62c2E72d2c2cb4FaFbcFB";
 
 const local = "http://localhost:5000/api/transactions";
 const global = "https://myoasisserver.herokuapp.com/api/transactions";
@@ -34,9 +34,7 @@ export default function Activity() {
       })
       .then((res) => {
         setTokens(res.data);
-      });
-
-  
+      });  
   }, []);
 
   return (

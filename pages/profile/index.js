@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { walletAddress } from "../../reduser";
 import myAwait from "../../public/image/await.gif";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const contractAddress = "0xf1d84e8fF2d0B9e937c62c2E72d2c2cb4FaFbcFB";
 
 
 export default function Profile() {
@@ -37,7 +37,7 @@ export default function Profile() {
           .call();
         data.push({ tokenId: tokenId, tokenMetadataURI: tokenMetadataURI });
       }
-      console.log(data);
+     
 
       const my_metadata = [];
       async function ReadToken() {

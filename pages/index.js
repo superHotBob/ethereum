@@ -25,8 +25,7 @@ export default function Home() {
     date: new Date }
     ).then((res) => {
       localStorage.setItem("jwt", res.data);
-      // localStorage.setItem('refresh', res.data.refreshToken);
-      console.log(res.data);
+      // localStorage.setItem('refresh', res.data.refreshToken);      
     });
   };
 

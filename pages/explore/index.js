@@ -4,7 +4,7 @@ import Web3 from "web3";
 import Image from "next/image";
 import myAwait from "../../public/image/await.gif";
 
-const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const contractAddress = "0xFd9406A502088d5436be2f65ddae1e3f401b55a9";
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 
 
@@ -19,8 +19,7 @@ export default function ExploreAll() {
 
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
-  useEffect(() => {
-    
+  useEffect(() => {    
     async function tokensList() {
       const totalSupply = await contract.methods.totalSupply().call();     
       const data = [];
@@ -35,8 +34,7 @@ export default function ExploreAll() {
 
       const my_metadata = [];
       async function ReadToken() {
-        for (const i of data) { 
-          console.log(data);        
+        for (const i of data) {              
           await fetch(`https://ipfs.io/ipfs/${i.tokenMetadataURI}`, {
             method: "get",
           })

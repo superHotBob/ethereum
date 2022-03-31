@@ -20,8 +20,7 @@ export const MetaMaskProvider = ({ children }) => {
     // }, [])
 
     // Check when App is Connected or Disconnected to MetaMask
-    const handleIsActive = useCallback(() => {
-        console.log('App is connected with MetaMask ', active)
+    const handleIsActive = useCallback(() => {       
         setIsActive(active)
     }, [active])
 
@@ -30,8 +29,7 @@ export const MetaMaskProvider = ({ children }) => {
     }, [handleIsActive])
 
     // Connect to MetaMask wallet
-    const connect = async () => {
-        console.log('Connecting to MetaMask...')
+    const connect = async () => {       
         setShouldDisable(true)
         try {
             await activate(injected).then(() => {
@@ -44,7 +42,7 @@ export const MetaMaskProvider = ({ children }) => {
 
     // Disconnect from Metamask wallet
     const disconnect = async () => {
-        console.log('Disconnecting wallet from App...')
+       
         try {
             deactivate()
         } catch(error) {

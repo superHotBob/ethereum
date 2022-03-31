@@ -35,13 +35,12 @@ export default function Connect() {
   }, []);
 
   useEffect(() => ReadAccountNext(), [account]);
-  function SendToBack (a) {
-    axios.post("http://localhost:5000/api/tokens", { tokens: a }).then((res) => {
-      console.log(res);
-      console.log(res.data);
-    });
+  // function SendToBack (a) {
+  //   axios.post("http://localhost:5000/api/tokens", { tokens: a }).then((res) => {
+      
+  //   });
 
-  };
+  // };
 
 
   async function ReadAccountNext() {
@@ -71,8 +70,7 @@ export default function Connect() {
         localStorage.setItem("account", res[0]);
         SendToBack(res[0]);
         router.push("/");
-      } else {
-        console.log("error account");
+      } else {       
         connect();        
       }
     });

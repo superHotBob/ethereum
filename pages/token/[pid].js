@@ -7,11 +7,11 @@ import myAwait from "../../public/image/await.gif";
  const axios = require("axios");
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const Contract = require("web3-eth-contract");
-const contractAddress = "0x2265C9ea6E9C593734e04b839B5f8a72a6427FeE";
+const contractAddress = "0xFd9406A502088d5436be2f65ddae1e3f401b55a9";
 
 const local = "http://localhost:5000/api/transactions";
 const global = "https://myoasisserver.herokuapp.com/api/transactions";
-const mylink = global;
+const mylink = local;
 
 export default function Token() {
   const str = useSelector(walletAddress);
@@ -20,28 +20,14 @@ export default function Token() {
 
   const [alltoken, setAllTokens] = useState([]);
 
-  // function Transfer (a, b ) {
-  //   axios.post("http://localhost:5000/api/transfer", 
-  //   {from: str,
-  //   to: a,
-  //   tokenId: b,
-  //   date: new Date }
-  //   ).then((res) => {      
-  //     console.log(res.data);
-  //   });
-  // };
-  // function Refresh() {
-  //   axios
-  //     .get(link, { headers: { authorization: localStorage.getItem("jwt") } })
-  //     .then((res) => setTokens(res.data));
-  // }
+  
   
   useEffect(()=>{
     async function myFetch() {
       fetch(mylink,  { method: 'get', headers: { authorization: localStorage.getItem("jwt") } })
-      .then((res) => res.json())
-      // .then((res=>console.log(res)))
-      .then((res) => setAllTokens(res));
+      .then((res) => res.json())      
+      .then((res) => setAllTokens(res))
+      .then(err=>console.log(err));
     }
     myFetch()
   },[])
@@ -56,8 +42,7 @@ export default function Token() {
       setTimeout(() => {
         ReadToken();
         async function ReadToken() {
-          const my_owner = await contract.methods.ownerOf(tokenId).call();
-          console.log(my_owner);
+          const my_owner = await contract.methods.ownerOf(tokenId).call();         
           setOwner(my_owner);
           setViewTransfer(my_owner === str ? true : false);
           const owner = await contract.methods.tokenURI(tokenId).call();
@@ -153,7 +138,8 @@ export default function Token() {
               </span>
             </p>
             <h3>{menu === "Owner" ? owner : " "}</h3>
-
+            {menu === 'History' && <>
+            {alltoken.filter(i => +i.tokenid === id).map(i=><h3 key={i.newuser}>{i.newuser}</h3>)}</>}
             {viewTransfer && (
               <>
                 <label className="price">
@@ -173,8 +159,7 @@ export default function Token() {
                 </button>
               </>
             )}
-            {menu === 'History' && <>
-            {alltoken.filter(i=>i.tokenid == id).map(i=><h3 key={i.newuser}>{i.newuser}</h3>)}</>}
+            
             <h3>{result}</h3>
           </div>
           <style jsx>{`
