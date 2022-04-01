@@ -6,7 +6,7 @@ import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
  const axios = require("axios");
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-// const Contract = require("web3-eth-contract");
+const Contract = require("web3-eth-contract");
 
 
 const local = "http://localhost:5000/api/transactions";
