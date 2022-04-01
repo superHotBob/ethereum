@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { myContract } from "../../reduser";
 import Web3 from "web3";
 import Image from "next/image";
 import myAwait from "../../public/image/await.gif";
 
-const contractAddress = "0xFd9406A502088d5436be2f65ddae1e3f401b55a9";
+
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 
 
 export default function ExploreAll() {
+  const contractAddress = useSelector(myContract);
   const [metadata, setImage] = useState([]);
   const [size, changeSize] = useState(true);
   const [sort, setSort] = useState(true);
