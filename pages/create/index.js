@@ -1,26 +1,32 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import closeIcon from "../../public/image/close.svg";
+import { useSelector } from "react-redux";
+import { myContract } from "../../reduser";
 import Web3 from "web3";
 import Router from "next/router";
 const axios = require("axios");
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
 const Contract = require("web3-eth-contract");
 
+const local = 'http://localhost:5000/api/minting';
+const global = 'https://myoasisserver.herokuapp.com/api/minting';
+const link = global;
 
-const contractAddress = "0xFd9406A502088d5436be2f65ddae1e3f401b55a9";
+// const contractAddress = "0x746180D2C15c82Bcd6AB893eb81a9EA534336720";
 
-export default function Single() {  
-  const [description, setDescription] = useState();
-  const [name_nft, setNameNft] = useState();
-  const [type_nft, setTypeNft] = useState();
+export default function Single() { 
+  const contractAddress = useSelector(myContract); 
+  const [description, setDescription] = useState('');
+  const [name_nft, setNameNft] = useState('');
+  const [type_nft, setTypeNft] = useState('');
   const [error_message, setErrorMessage] = useState("none");
   const [imageNft, selectedImageNft] = useState();
 
   const web3 = new Web3(Web3.givenProvider);
 
   function SendToBack (a) {   
-    axios.post("http://localhost:5000/api/minting",
+    axios.post(link,
      { 
        tokenId: a,
        author: window.ethereum.selectedAddress,     
@@ -73,7 +79,7 @@ export default function Single() {
             console.log(res.logs);
             let id = web3.utils.hexToNumber(res.logs[0].topics[3]);          
             Router.push(`/token/${id}`);
-            SendToBack(id);
+            // SendToBack(id);
           })
           .then((err) => console.log(err));
       })

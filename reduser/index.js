@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  contractAddress: "0xFd9406A502088d5436be2f65ddae1e3f401b55a9", 
+  contractAddress: "0x746180D2C15c82Bcd6AB893eb81a9EA534336720", 
   walletAddress: "",
   balance: 0,
   token: "",

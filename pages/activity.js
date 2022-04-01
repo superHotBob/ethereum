@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Web3 from "web3";
+import { useSelector } from "react-redux";
+import { myContract } from "../reduser";
 import { useRouter } from "next/router";
 const contractABI = require("../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-const contractAddress = "0xf1d84e8fF2d0B9e937c62c2E72d2c2cb4FaFbcFB";
 
 const local = "http://localhost:5000/api/transactions";
 const global = "https://myoasisserver.herokuapp.com/api/transactions";
@@ -14,9 +15,11 @@ const web3 = new Web3(
     Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")
 );
 
-const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
 export default function Activity() {
+  const contractAddress = useSelector(myContract);
+  const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+
   const [allTokens, setTokens] = useState([]);
 
   const router = useRouter();

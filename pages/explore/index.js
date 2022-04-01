@@ -21,6 +21,7 @@ export default function ExploreAll() {
   );
 
   const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+  console.log(contract);
 
   useEffect(() => {    
     async function tokensList() {

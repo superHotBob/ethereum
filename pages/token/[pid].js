@@ -213,6 +213,7 @@ export default function Token() {
             }
             .center_block {
               width: auto;
+              max-width: 90%;
               text-align: center;
               position: relative;
               height: 60vh;
