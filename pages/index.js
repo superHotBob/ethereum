@@ -2,8 +2,8 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Web3 from "web3";
 const axios = require("axios");
-import { useDispatch, useSelector } from "react-redux";
-import { addAccount ,  balance, changeBalance} from "../reduser";
+import { useDispatch } from "react-redux";
+import { addAccount ,  changeBalance} from "../reduser";
 import { useEffect } from "react";
 
 const local = 'http://localhost:5000/api/login';
@@ -11,8 +11,7 @@ const global = 'https://myoasisserver.herokuapp.com/api/login';
 const link = global;
 
 export default function Home() {
-  const dispatch = useDispatch();
-  const myBalance = useSelector(balance);
+  const dispatch = useDispatch(); 
   const web3 = new Web3(
     Web3.givenProvider ||
       Web3.providers.HttpProvider("https://testnet.emerald.oasis.dev")

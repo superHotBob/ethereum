@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
- 
- 
+  contractAddress: "0xFd9406A502088d5436be2f65ddae1e3f401b55a9", 
   walletAddress: "",
   balance: 0,
   token: "",
@@ -33,8 +32,7 @@ export const counterSlice = createSlice({
 });
 
 export const {
-  increment,
- 
+  increment, 
   addAccount,
   changeBalance,
   setToken,
@@ -42,6 +40,7 @@ export const {
 } = counterSlice.actions;
 
 export const selectCount = (state) => state.counter.value;
+export const myContract = (state) => state.counter.contractAddress;
 export const walletAddress = (state) => state.counter.walletAddress;
 export const balance = (state) => state.counter.balance;
 export const token = (state) => state.counter.token;

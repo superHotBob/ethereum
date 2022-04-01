@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { token, tokenId, walletAddress } from "../../reduser";
+import { walletAddress, myContract } from "../../reduser";
 import Web3 from "web3";
 import myAwait from "../../public/image/await.gif";
  const axios = require("axios");
 const contractABI = require("../../artifacts/contracts/NFTMinter.sol/contract-abi.json");
-const Contract = require("web3-eth-contract");
-const contractAddress = "0xFd9406A502088d5436be2f65ddae1e3f401b55a9";
+// const Contract = require("web3-eth-contract");
+
 
 const local = "http://localhost:5000/api/transactions";
 const global = "https://myoasisserver.herokuapp.com/api/transactions";
-const mylink = local;
+const mylink = global;
 
 export default function Token() {
+
+  const contractAddress = useSelector(myContract);
   const str = useSelector(walletAddress);
+
   const [viewTransfer, setViewTransfer] = useState();
   const [id, setId] = useState();
-
-  const [alltoken, setAllTokens] = useState([]);
-
-  
+  const [alltoken, setAllTokens] = useState([]);  
   
   useEffect(()=>{
     async function myFetch() {
